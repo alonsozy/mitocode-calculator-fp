@@ -19,6 +19,7 @@
 				<maven.compiler.target>1.8</maven.compiler.target>
 				<swagger.version>1.5.9</swagger.version>
 				<springfox.version>2.5.0</springfox.version>
+				<dependency.jacoco.version>0.8.4</dependency.jacoco.version>
 		</properties>
 
 		<dependencies>
@@ -79,6 +80,35 @@
 								</configuration>
 						</plugin>
 						<!-- TODO add fabric8 plugins-->
+						
+						
+						<!-- Jacoco configuration -->
+						<plugin>
+							<groupId>org.jacoco</groupId>
+							<artifactId>jacoco-maven-plugin</artifactId>
+							<version>${dependency.jacoco.version}</version>
+							<configuration>
+								<excludes>
+									<exclude>**/SimpleCalculatorApplication*</exclude>
+									<exclude>**/SwaggerConfiguration*</exclude>
+								</excludes>
+							</configuration>
+							<executions>
+								<execution>
+									<goals>
+										<goal>prepare-agent</goal>
+									</goals>
+								</execution>
+								<execution>
+									<id>report</id>
+									<phase>prepare-package</phase>
+									<goals>
+										<goal>report</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+						<!-- Jacoco configuration -->
 				</plugins>
 		</build>
 
