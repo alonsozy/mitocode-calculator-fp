@@ -1,0 +1,18 @@
+
+newman run calculator-collection.json -e vars.json
+
+newman run calculator-collection.json  --global-var "url_server=http://localhost:8080"
+
+newman run calculator-collection.json  --global-var url_server=http://localhost:8080
+
+
+
+docker run -d -p8080:8080 --name cont_fp alonsozy/final-project:1.0.1
+
+-- comando para ejecutar el dockerfile
+ 
+docker build -t test-newman:1.0.3 .
+docker run -e URL_SERVER=http://192.168.99.100:8080 test-newman:1.0.3
+
+
+

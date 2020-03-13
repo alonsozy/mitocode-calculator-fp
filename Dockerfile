@@ -8,6 +8,7 @@ RUN mvn clean package
 RUN mvn jacoco:report
 RUN ls -la /calculadora
 
+
 FROM openjdk:11.0.6-jdk
 LABEL maintainer="alonsofisi@gmail.com"
 WORKDIR /workspace

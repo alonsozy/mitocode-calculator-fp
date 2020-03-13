@@ -1,0 +1,473 @@
+{
+	"info": {
+		"_postman_id": "8c1d939a-1466-49b2-b9fc-42c5dad31792",
+		"name": "collection-calculator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add_ok",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6fc1f2a8-4760-4b14-803b-77d551596f60",
+						"exec": [
+							"pm.test('response is ok v1 ',function(){",
+							"   pm.response.to.have.status(200); ",
+							"});",
+							"",
+							"pm.test('response is ok v2 ',function(){",
+							"    pm.response.to.be.ok;",
+							"});",
+							"",
+							"// validacion si la petición se ha servido en un determinado tiempo",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"var response = \"50 + 58 = 108\";",
+							"pm.test(\"Response from server\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.have.body(response);",
+							"    //console.log(pm.info.requestName);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/add/50/58",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"add",
+						"50",
+						"58"
+					]
+				},
+				"description": "Request for add two numbers"
+			},
+			"response": []
+		},
+		{
+			"name": "add_not_found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6fc1f2a8-4760-4b14-803b-77d551596f60",
+						"exec": [
+							"pm.test('Path not found ',function(){",
+							"   pm.response.to.be.notFound;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/add2/50/58",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"add2",
+						"50",
+						"58"
+					]
+				},
+				"description": "Request for Path not found"
+			},
+			"response": []
+		},
+		{
+			"name": "add_not_numbers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6fc1f2a8-4760-4b14-803b-77d551596f60",
+						"exec": [
+							"pm.test('Not Numbers ',function(){",
+							"   pm.response.to.be.badRequest;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/add/X/Y",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"add",
+						"X",
+						"Y"
+					]
+				},
+				"description": "Request for add two numbers"
+			},
+			"response": []
+		},
+		{
+			"name": "div_ok",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "85a8f3d5-1850-40e7-a2cf-905114e0ce1c",
+						"exec": [
+							"pm.test('response is OK',function(){",
+							"    pm.response.to.be.ok;",
+							"});",
+							"",
+							"// validacion si la petición se ha servido en un determinado tiempo",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"var response = \"50 / 5 = 10\";",
+							"pm.test(\"Response from server\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.have.body(response);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/div/50/5",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"div",
+						"50",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "div_not_numbers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3827bfdb-067d-4b33-9977-1abdcf6acd1e",
+						"exec": [
+							"pm.test('Not Numbers ',function(){",
+							"   pm.response.to.be.badRequest;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/div/A/B",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"div",
+						"A",
+						"B"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "div_with_zero",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3827bfdb-067d-4b33-9977-1abdcf6acd1e",
+						"exec": [
+							"pm.test('With Zero ',function(){",
+							"   pm.response.to.be.error;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/div/15/0",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"div",
+						"15",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mul_ok",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11e06af5-5099-41b5-8481-96693f53f1b8",
+						"exec": [
+							"pm.test('response is OK',function(){",
+							"    pm.response.to.be.ok;",
+							"});",
+							"",
+							"// validacion si la petición se ha servido en un determinado tiempo",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"var response = \"50 x 5 = 250\";",
+							"pm.test(\"Response from server\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.have.body(response);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/mul/50/5",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"mul",
+						"50",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mul_not_numbers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11e06af5-5099-41b5-8481-96693f53f1b8",
+						"exec": [
+							"pm.test('Not Numbers ',function(){",
+							"   pm.response.to.be.badRequest;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/mul/Z/Y",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"mul",
+						"Z",
+						"Y"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sub_ok",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "826f6129-38e9-432a-95c0-5394c42d3b53",
+						"exec": [
+							"pm.test('response is OK',function(){",
+							"    pm.response.to.be.ok;",
+							"});",
+							"",
+							"// validacion si la petición se ha servido en un determinado tiempo",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"var response = \"50 - 5 = 45\";",
+							"pm.test(\"Response from server\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.have.body(response);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/sub/50/5",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"sub",
+						"50",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sub_not_numbers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "826f6129-38e9-432a-95c0-5394c42d3b53",
+						"exec": [
+							"pm.test('Not Numbers ',function(){",
+							"   pm.response.to.be.badRequest;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/sub/A/B",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"sub",
+						"A",
+						"B"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hello",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "30fb228a-6fdf-467a-8ba9-450665682499",
+						"exec": [
+							"pm.test('response is OK',function(){",
+							"    pm.response.to.be.ok;",
+							"});",
+							"",
+							"// validacion si la petición se ha servido en un determinado tiempo",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response from server\", function () {",
+							"    pm.response.to.not.be.error; ",
+							"    pm.expect(pm.response.text()).to.include(\"Hi \");",
+							"    ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url_server}}/api/whoami",
+					"host": [
+						"{{url_server}}"
+					],
+					"path": [
+						"api",
+						"whoami"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
