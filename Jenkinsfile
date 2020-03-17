@@ -12,6 +12,7 @@ pipeline{
 	    stage('Example Build') {
     	   steps {
    	        echo 'Building ${APP_DOCKER_IMAGE}'
+   	        sh 'ls -la'
    	        sh 'docker build -t ${APP_DOCKER_IMAGE} .'
    	        sh 'docker build -t ${NEWMAN_DOCKER_IMAGE} ./test-newman/'
    	        echo 'Generate a compose file'
