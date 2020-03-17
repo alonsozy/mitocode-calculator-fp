@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  api:
+    image: {{APP_DOCKER_IMAGE}}
+    restart: always
+    networks:
+      - apiCalculadora
+    ports:
+      - 1080:8080
+
+  test-newman:
+    image: {{NEWMAN_DOCKER_IMAGE}}
+    environment:
+      URL_SERVER: http://{{HOST_APP}}:1080
+    restart: always
+    depends_on:
+      - api-calculador
+    restart: on-failure
+    networks:
+      - apiCalculadora
+
+
+networks:
+  apiCalculadora:
+    driver: bridge
