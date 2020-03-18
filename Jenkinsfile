@@ -21,22 +21,23 @@ pipeline{
    	          sh 'docker build -t ${NEWMAN_DOCKER_IMAGE} ./test-newman/'
 			}
     	}
-		stage('Generate docker-compose.yml') {
+		stage('Run App Calculator') {
     	   steps {
-   	          echo 'Generate a docker-compose file'
-   	          sh "sed -i 's@{{APP_DOCKER_IMAGE}}@${APP_DOCKER_IMAGE}@g' docker-compose.dist"
-   	          sh "sed -i 's@{{NEWMAN_DOCKER_IMAGE}}@${NEWMAN_DOCKER_IMAGE}@g' docker-compose.dist"
-   	          sh "sed -i 's@{{HOST_APP}}@${HOST_APP}@g' docker-compose.dist"
-   	          sh "cat docker-compose.dist"
+   	          echo 'Creating container app'
+   	          sh 'docker run -d -p2080:8080 --name app_calc ${APP_DOCKER_IMAGE}'
 			}
     	}
-		stage('Executing docker-compose') {
+		stage('Run test-newman') {
     	   steps {
-   	          sh 'docker-compose -f docker-compose.dist up -d'
-   	          sh 'sleep 10'
-   	          sh 'docker-compose -f docker-compose.dist ps'
-   	          echo '*********** LOGS DEL SERVICE TEST-NEWMAN ********************'
-   	          sh 'docker-compose logs test-newman'
+   	          echo 'Creating container newman'
+   	          sh 'docker run -e URL_SERVER=http://${HOST_APP}:2080 --name newman ${NEWMAN_DOCKER_IMAGE}'
+			}
+    	}
+    	stage('Delete Containers') {
+    	   steps {
+   	          echo 'Delete containers'
+   	          sh 'docker rm -f app_calc'
+   	          sh 'docker rm -f newman'
 			}
     	}
 	}
