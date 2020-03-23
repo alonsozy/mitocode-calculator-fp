@@ -19,7 +19,7 @@ pipeline{
     	}
 		
 	}
-	ost{
+	post{
 		always{
 			echo "Se guardara el jar en el repositorio de artefactos de jenkins"
 			archiveArtifacts artifacts: '/app-calc-${VERSION_IMAGE}.jar', onlyIfSuccessful: true
