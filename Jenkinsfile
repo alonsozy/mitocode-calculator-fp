@@ -6,8 +6,8 @@ pipeline{
 	environment {
 	    APP_DOCKER_IMAGE = "${params.APP_DOCKER_IMAGE}"
 	    NEWMAN_DOCKER_IMAGE = "${params.NEWMAN_DOCKER_IMAGE}"
-		USER_DOCKER = "${params.NEWMAN_DOCKER_IMAGE}"
-		PASS_DOCKER = "${params.NEWMAN_DOCKER_IMAGE}"
+		USER_DOCKER = "${params.USER_DOCKER}"
+		PASS_DOCKER = "${params.PASS_DOCKER}"
 	}
 	stages {
 	    stage('Build Image of Calculator') {
@@ -26,7 +26,11 @@ pipeline{
 		stage('Pushing images..'){
 			steps{
 				echo 'Autentificacion'
-				sh 'docker login --username ${USER_DOCKER} --password ${PASS_DOCKER} '
+				sh 'docker login --username=${USER_DOCKER} --password=${PASS_DOCKER}'
+				sh "docker push ${APP_DOCKER_IMAGE}"
+				sh "docker push ${NEWMAN_DOCKER_IMAGE}"
+                sh "docker rmi ${APP_DOCKER_IMAGE}"
+				sh "docker rmi ${NEWMAN_DOCKER_IMAGE}"
 			}
 		}
 		
