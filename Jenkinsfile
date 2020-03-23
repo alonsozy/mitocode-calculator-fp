@@ -16,30 +16,37 @@ pipeline{
    	         sh 'docker build -t ${APP_DOCKER_IMAGE} .'
 			}
     	}
-    	/*stage('Build Image for test With Newman') {
+    	stage('Build Image for test With Newman') {
     	   steps {
    	          sh 'docker build -t ${NEWMAN_DOCKER_IMAGE} ./test-newman/'
 			}
-    	}*/
+    	}
 		stage('Run App Calculator') {
     	   steps {
    	          echo 'Creating container app'
    	          sh 'docker run -d -p2080:8080 --name app_calc ${APP_DOCKER_IMAGE}'
 			}
     	}
-		/*stage('Run test-newman') {
+		stage('Run test-newman') {
     	   steps {
    	          echo 'Creating container newman'
    	          sh 'docker run -e URL_SERVER=http://${HOST_APP}:2080 --name newman ${NEWMAN_DOCKER_IMAGE}'
 			}
-    	}*/
-    	/*stage('Delete Containers') {
+    	}
+
+		stage('Viendo Logs del Test'){
+			steps{
+				sh 'docker logs ${NEWMAN_DOCKER_IMAGE}'
+			}
+		}
+
+    	stage('Delete Containers') {
     	   steps {
    	          echo 'Delete containers'
    	          sh 'docker rm -f app_calc'
    	          sh 'docker rm -f newman'
 			}
-    	}*/
+    	}
 	}
 }
 
