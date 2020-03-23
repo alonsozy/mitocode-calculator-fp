@@ -3,6 +3,7 @@ version: '3.1'
 services:
   api-calculador:
     image: {{APP_DOCKER_IMAGE}}
+    build: ./
     restart: always
     networks:
       - apiCalculadora
@@ -11,6 +12,7 @@ services:
 
   test-newman:
     image: {{NEWMAN_DOCKER_IMAGE}}
+    build: ./test-newman/
     environment:
       URL_SERVER: http://{{HOST_APP}}:1080
     restart: always
