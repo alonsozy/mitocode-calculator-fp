@@ -33,7 +33,7 @@ pipeline{
 		stage('Executing docker-compose') {
     	   steps {
    	          sh 'docker-compose -f docker-compose.dist up -d'
-   	          sh 'sleep 10'
+   	          sh 'sleep 20'
    	          sh 'docker-compose -f docker-compose.dist ps'
    	          echo '*********** LOGS DEL SERVICE TEST-NEWMAN ********************'
    	          sh 'docker-compose logs test-newman'

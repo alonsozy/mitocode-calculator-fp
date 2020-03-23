@@ -2,19 +2,19 @@ version: '3.1'
 
 services: 
   api-calculador:
-    image: alonsozy/final-project:2.0.1
+    image: alonsozy/final-project:1.0.7
     build: ./
     restart: always
     ports:
-      - 8080:8080
+      - 1080:8080
     networks:
       - backend
       
   test-newman:
-    image: alonsozy/test-newman:2.0.1
+    image: alonsozy/test-newman:1.0.7
     build: ./test-newman/
     environment:
-      URL_SERVER: http://192.168.99.100:8080
+      URL_SERVER: http://192.168.99.100:1080
     restart: always
     depends_on:
       - api-calculador
