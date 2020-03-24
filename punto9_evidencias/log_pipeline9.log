@@ -1,0 +1,302 @@
+Started by user root
+Obtained Jenkinsfile from git https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/save_artifact
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+using credential 382efd05-aded-4c29-b766-7f8aae520975
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git # timeout=10
+Fetching upstream changes from https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+ > git --version # timeout=10
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --progress -- https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 02da5dcf38c4caa92bb494bd983900da758df534 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 02da5dcf38c4caa92bb494bd983900da758df534 # timeout=10
+Commit message: "evidencias pipeline7"
+ > git rev-list --no-walk fcb856720455f997282e1c093ae12e17bbed2dad # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Construyendo el app Calculadora ...)
+[Pipeline] sh
++ mvn clean package
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.inject.internal.cglib.core.$ReflectUtils$1 (file:/usr/share/maven/lib/guice.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of com.google.inject.internal.cglib.core.$ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[[1;34mINFO[m] Scanning for projects...
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for com.mitocode:mitocode-calculator:jar:0.0.1-SNAPSHOT
+[[1;33mWARNING[m] The expression ${artifactId} is deprecated. Please use ${project.artifactId} instead.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] It is highly recommended to fix these problems because they threaten the stability of your build.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] For this reason, future Maven versions might no longer support building such malformed projects.
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------< [0;36mcom.mitocode:mitocode-calculator[0;1m >------------------[m
+[[1;34mINFO[m] [1mBuilding mitocode-calculator 0.0.1-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:3.1.0:clean[m [1m(default-clean)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Deleting /var/lib/jenkins/workspace/save_artifact/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.4:prepare-agent[m [1m(default)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] argLine set to -javaagent:/var/lib/jenkins/.m2/repository/org/jacoco/org.jacoco.agent/0.8.4/org.jacoco.agent-0.8.4-runtime.jar=destfile=/var/lib/jenkins/workspace/save_artifact/target/jacoco.exec,excludes=**/SimpleCalculatorApplication*:**/SwaggerConfiguration*
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:resources[m [1m(default-resources)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 0 resource
+[[1;34mINFO[m] Copying 2 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:compile[m [1m(default-compile)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 3 source files to /var/lib/jenkins/workspace/save_artifact/target/classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:3.1.0:testResources[m [1m(default-testResources)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] skip non existing resourceDirectory /var/lib/jenkins/workspace/save_artifact/src/test/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.8.1:testCompile[m [1m(default-testCompile)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module!
+[[1;34mINFO[m] Compiling 1 source file to /var/lib/jenkins/workspace/save_artifact/target/test-classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:2.22.2:test[m [1m(default-test)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+11:17:57.314 [main] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:57.337 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+11:17:57.364 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+11:17:57.483 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.mitocode.calculator.SimpleCalculatorControllerTest] from class [org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper]
+11:17:57.534 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.mitocode.calculator.SimpleCalculatorControllerTest], using SpringBootContextLoader
+11:17:57.548 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTest-context.xml] does not exist
+11:17:57.554 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTestContext.groovy] does not exist
+11:17:57.554 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+11:17:57.557 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: SimpleCalculatorControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:17:57.827 [main] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.018 [main] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/var/lib/jenkins/workspace/save_artifact/target/classes/com/mitocode/calculator/SimpleCalculatorApplication.class]
+11:17:58.057 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.mitocode.calculator.SimpleCalculatorApplication for test class com.mitocode.calculator.SimpleCalculatorControllerTest
+11:17:58.063 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - @TestExecutionListeners is not present for class [com.mitocode.calculator.SimpleCalculatorControllerTest]: using defaults.
+11:17:58.065 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+11:17:58.111 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
+11:17:58.114 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+11:17:58.114 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@5a47730c, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@15369d73, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@1cde374, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@6818fd48, org.springframework.test.context.support.DirtiesContextTestExecutionListener@9263c54, org.springframework.test.context.event.EventPublishingTestExecutionListener@28daf506, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@4662752a, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@693f2213, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@514377fc, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@2e4eda17, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7b5021d1]
+11:17:58.135 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.138 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.224 [main] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.225 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+11:17:58.225 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+11:17:58.226 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.mitocode.calculator.SimpleCalculatorControllerTest] from class [org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper]
+11:17:58.230 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.mitocode.calculator.SimpleCalculatorControllerTest], using SpringBootContextLoader
+11:17:58.230 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTest-context.xml] does not exist
+11:17:58.233 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTestContext.groovy] does not exist
+11:17:58.235 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+11:17:58.236 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: SimpleCalculatorControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:17:58.248 [main] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.249 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.mitocode.calculator.SimpleCalculatorApplication for test class com.mitocode.calculator.SimpleCalculatorControllerTest
+11:17:58.254 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - @TestExecutionListeners is not present for class [com.mitocode.calculator.SimpleCalculatorControllerTest]: using defaults.
+11:17:58.255 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+11:17:58.257 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
+11:17:58.257 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+11:17:58.258 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@66b0e207, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@74a58a06, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@7308c820, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@5d601832, org.springframework.test.context.support.DirtiesContextTestExecutionListener@3ca17943, org.springframework.test.context.event.EventPublishingTestExecutionListener@640c216b, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@5170bc02, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@c0c8f96, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@3bd08435, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@3e52ed5d, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@6a96d639]
+11:17:58.259 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.259 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.449 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.452 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+[[1;34mINFO[m] Running com.mitocode.calculator.[1mSimpleCalculatorControllerTest[m
+11:17:58.470 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.470 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.472 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.476 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.485 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@39a7eca5 testClass = SimpleCalculatorControllerTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@45bd4753 testClass = SimpleCalculatorControllerTest, locations = '{}', classes = '{class com.mitocode.calculator.SimpleCalculatorApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true}', contextCustomizers = set[[ImportsContextCustomizer@156cfa20 key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration, org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1cfc2538, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2e86807a, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@784223e9, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@f563d36, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@27fdd4e6, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@1da4b3f9], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+11:17:58.490 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.492 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+11:17:58.510 [main] DEBUG org.springframework.test.context.support.DependencyInjectionTestExecutionListener - Performing dependency injection for test context [[DefaultTestContext@39a7eca5 testClass = SimpleCalculatorControllerTest, testInstance = com.mitocode.calculator.SimpleCalculatorControllerTest@4e6cbdf1, testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@45bd4753 testClass = SimpleCalculatorControllerTest, locations = '{}', classes = '{class com.mitocode.calculator.SimpleCalculatorApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true}', contextCustomizers = set[[ImportsContextCustomizer@156cfa20 key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration, org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1cfc2538, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@2e86807a, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@784223e9, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@f563d36, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@27fdd4e6, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@1da4b3f9], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]]].
+11:17:58.899 [main] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true, server.port=-1}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.2.4.RELEASE)
+
+2020-03-24 11:17:59.461  INFO 15554 --- [           main] c.m.c.SimpleCalculatorControllerTest     : Starting SimpleCalculatorControllerTest on ubuntu with PID 15554 (started by jenkins in /var/lib/jenkins/workspace/save_artifact)
+2020-03-24 11:17:59.467  INFO 15554 --- [           main] c.m.c.SimpleCalculatorControllerTest     : No active profile set, falling back to default profiles: default
+2020-03-24 11:18:04.518  WARN 15554 --- [           main] uration$JodaDateTimeJacksonConfiguration : Auto-configuration of Jackson's Joda-Time integration is deprecated in favor of using java.time (JSR-310).
+2020-03-24 11:18:04.678  INFO 15554 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-03-24 11:18:04.864  INFO 15554 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2020-03-24 11:18:05.137  INFO 15554 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2020-03-24 11:18:05.138  INFO 15554 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2020-03-24 11:18:05.164  INFO 15554 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 25 ms
+2020-03-24 11:18:05.225  INFO 15554 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-03-24 11:18:05.282  INFO 15554 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-03-24 11:18:05.309  INFO 15554 --- [           main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-03-24 11:18:05.861  INFO 15554 --- [           main] c.m.c.SimpleCalculatorControllerTest     : Started SimpleCalculatorControllerTest in 6.94 seconds (JVM running for 10.2)
+2020-03-24 11:18:06.864  WARN 15554 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "num1"]
+2020-03-24 11:18:06.882  WARN 15554 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "a"]
+2020-03-24 11:18:06.957  WARN 15554 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "a"]
+2020-03-24 11:18:07.032  WARN 15554 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/whoami
+       Parameters = {}
+          Headers = [Content-Type:"application/json"]
+             Body = <no character encoding set>
+    Session Attrs = {}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.HttpRequestMethodNotSupportedException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 405
+    Error message = Request method 'POST' not supported
+          Headers = [Allow:"GET"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+2020-03-24 11:18:07.054  WARN 15554 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "a"]
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m12[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.595 s - in com.mitocode.calculator.[1mSimpleCalculatorControllerTest[m
+2020-03-24 11:18:07.231  INFO 15554 --- [extShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 12, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.4:report[m [1m(report)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Loading execution data file /var/lib/jenkins/workspace/save_artifact/target/jacoco.exec
+[[1;34mINFO[m] Analyzed bundle 'mitocode-calculator' with 1 classes
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-jar-plugin:3.1.2:jar[m [1m(default-jar)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Building jar: /var/lib/jenkins/workspace/save_artifact/target/mitocode-calculator.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mspring-boot-maven-plugin:2.2.4.RELEASE:repackage[m [1m(repackage)[m @ [36mmitocode-calculator[0;1m ---[m
+[[1;34mINFO[m] Replacing main artifact with repackaged archive
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  19.178 s
+[[1;34mINFO[m] Finished at: 2020-03-24T11:18:09-07:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[Pipeline] sh
++ ls -la target
+total 26648
+drwxr-xr-x 10 jenkins jenkins     4096 Mar 24 11:18 .
+drwxr-xr-x  8 jenkins jenkins     4096 Mar 24 11:17 ..
+drwxr-xr-x  4 jenkins jenkins     4096 Mar 24 11:17 classes
+drwxr-xr-x  3 jenkins jenkins     4096 Mar 24 11:17 generated-sources
+drwxr-xr-x  3 jenkins jenkins     4096 Mar 24 11:17 generated-test-sources
+-rw-r--r--  1 jenkins jenkins   268992 Mar 24 11:18 jacoco.exec
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 24 11:18 maven-archiver
+drwxr-xr-x  3 jenkins jenkins     4096 Mar 24 11:17 maven-status
+-rw-r--r--  1 jenkins jenkins 26965525 Mar 24 11:18 mitocode-calculator.jar
+-rw-r--r--  1 jenkins jenkins     6185 Mar 24 11:18 mitocode-calculator.jar.original
+drwxr-xr-x  3 jenkins jenkins     4096 Mar 24 11:18 site
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 24 11:18 surefire-reports
+drwxr-xr-x  3 jenkins jenkins     4096 Mar 24 11:17 test-classes
+[Pipeline] sh
++ cp target/mitocode-calculator.jar app-calc-1.0.jar
+[Pipeline] sh
++ ls -la
+total 52748
+drwxr-xr-x  8 jenkins jenkins     4096 Mar 24 11:17 .
+drwxr-xr-x 10 jenkins jenkins     4096 Mar 23 16:17 ..
+-rw-r--r--  1 jenkins jenkins      967 Mar 23 16:08 1-Jenkinsfile
+-rw-r--r--  1 jenkins jenkins 26965525 Mar 24 11:18 app-calc-1.0.jar
+-rw-r--r--  1 jenkins jenkins 26965525 Mar 24 09:23 app-calc-1.5.jar
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 24 11:17 aws
+-rw-r--r--  1 jenkins jenkins      481 Mar 23 16:08 docker-compose.dist
+-rw-r--r--  1 jenkins jenkins      502 Mar 23 16:08 docker-compose.yml
+-rw-r--r--  1 jenkins jenkins      545 Mar 23 16:08 Dockerfile
+drwxr-xr-x  8 jenkins jenkins     4096 Mar 24 11:17 .git
+-rw-r--r--  1 jenkins jenkins      332 Mar 23 16:08 .gitignore
+-rw-r--r--  1 jenkins jenkins      745 Mar 24 09:22 Jenkinsfile
+-rw-r--r--  1 jenkins jenkins     1007 Mar 23 16:08 Jenkinsfile_ok_push
+-rw-r--r--  1 jenkins jenkins     1371 Mar 23 16:08 Jenkinsfile_ok_test_newman
+-rw-r--r--  1 jenkins jenkins     1260 Mar 23 16:08 Jenkinsfile_with_containers
+-rw-r--r--  1 jenkins jenkins     1196 Mar 24 11:17 notes.txt
+-rw-r--r--  1 jenkins jenkins     3195 Mar 23 16:08 pom.xml
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 24 11:17 punto7_evidencias
+drwxr-xr-x  4 jenkins jenkins     4096 Mar 23 16:08 src
+drwxr-xr-x 10 jenkins jenkins     4096 Mar 24 11:18 target
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 23 16:08 test-newman
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Se guardara el jar en el repositorio de artefactos de jenkins
+[Pipeline] sh
++ ls -la
+total 52748
+drwxr-xr-x  8 jenkins jenkins     4096 Mar 24 11:17 .
+drwxr-xr-x 10 jenkins jenkins     4096 Mar 23 16:17 ..
+-rw-r--r--  1 jenkins jenkins      967 Mar 23 16:08 1-Jenkinsfile
+-rw-r--r--  1 jenkins jenkins 26965525 Mar 24 11:18 app-calc-1.0.jar
+-rw-r--r--  1 jenkins jenkins 26965525 Mar 24 09:23 app-calc-1.5.jar
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 24 11:17 aws
+-rw-r--r--  1 jenkins jenkins      481 Mar 23 16:08 docker-compose.dist
+-rw-r--r--  1 jenkins jenkins      502 Mar 23 16:08 docker-compose.yml
+-rw-r--r--  1 jenkins jenkins      545 Mar 23 16:08 Dockerfile
+drwxr-xr-x  8 jenkins jenkins     4096 Mar 24 11:17 .git
+-rw-r--r--  1 jenkins jenkins      332 Mar 23 16:08 .gitignore
+-rw-r--r--  1 jenkins jenkins      745 Mar 24 09:22 Jenkinsfile
+-rw-r--r--  1 jenkins jenkins     1007 Mar 23 16:08 Jenkinsfile_ok_push
+-rw-r--r--  1 jenkins jenkins     1371 Mar 23 16:08 Jenkinsfile_ok_test_newman
+-rw-r--r--  1 jenkins jenkins     1260 Mar 23 16:08 Jenkinsfile_with_containers
+-rw-r--r--  1 jenkins jenkins     1196 Mar 24 11:17 notes.txt
+-rw-r--r--  1 jenkins jenkins     3195 Mar 23 16:08 pom.xml
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 24 11:17 punto7_evidencias
+drwxr-xr-x  4 jenkins jenkins     4096 Mar 23 16:08 src
+drwxr-xr-x 10 jenkins jenkins     4096 Mar 24 11:18 target
+drwxr-xr-x  2 jenkins jenkins     4096 Mar 23 16:08 test-newman
+[Pipeline] archiveArtifacts
+Archiving artifacts
+[Pipeline] echo
+========pipeline executed successfully ========
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
