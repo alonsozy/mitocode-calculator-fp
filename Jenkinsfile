@@ -8,21 +8,24 @@ pipeline{
 		VERSION_IMAGE = "${params.VERSION_IMAGE}"
 	}
 	stages {
-	    stage('Build Image of Calculator') {
-    	   steps {
-   	         echo 'Building ${APP_DOCKER_IMAGE}'
-			 sh 'ls -la'
-   	         sh 'docker build -t ${APP_DOCKER_IMAGE} .'
-			 sh 'cp /workspace/app.jar /app-calc-${VERSION_IMAGE}.jar'
-			 sh 'ls -la'
+	    stage('Construyendo el app Calculadora ...'){
+			agent{
+				docker{ image 'maven:3.6.3-jdk-11-slim'}
 			}
-    	}
+			steps{
+				sh 'mvn clean package'
+				sh 'ls -la target'
+				sh 'cp target/mitocode-calculator.jar app-calc-${VERSION_IMAGE}.jar'
+				sh 'ls -la'
+			}
+		}
 		
 	}
 	post{
 		always{
 			echo "Se guardara el jar en el repositorio de artefactos de jenkins"
-			archiveArtifacts artifacts: '/app-calc-${VERSION_IMAGE}.jar', onlyIfSuccessful: true
+			sh 'ls -la'
+			archiveArtifacts artifacts: 'app-calc-${VERSION_IMAGE}.jar', onlyIfSuccessful: true
 		}
 		success{
 			echo "========pipeline executed successfully ========"
