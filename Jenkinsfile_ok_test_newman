@@ -40,5 +40,17 @@ pipeline{
 			}
     	}
 	}
+	post{
+		always{
+			echo "Down ephemeral environment"
+			sh 'docker-compose -f docker-compose.dist down' 
+		}
+		success{
+			echo "========pipeline executed successfully ========"
+		}
+		failure{
+			echo "========pipeline execution failed========"
+		}
+	}
 }
 
