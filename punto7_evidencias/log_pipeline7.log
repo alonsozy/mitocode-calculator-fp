@@ -1,0 +1,1800 @@
+Started by user root
+Obtained Jenkinsfile_ok_test_newman from git https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/api-ci
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+using credential 382efd05-aded-4c29-b766-7f8aae520975
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git # timeout=10
+Fetching upstream changes from https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+ > git --version # timeout=10
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --progress -- https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision fcb856720455f997282e1c093ae12e17bbed2dad (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f fcb856720455f997282e1c093ae12e17bbed2dad # timeout=10
+Commit message: "fix"
+ > git rev-list --no-walk fcb856720455f997282e1c093ae12e17bbed2dad # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Build Image of Calculator)
+[Pipeline] echo
+Building ${APP_DOCKER_IMAGE}
+[Pipeline] sh
++ ls -la
+total 64
+drwxr-xr-x  6 jenkins jenkins 4096 Mar 24 10:38 .
+drwxr-xr-x 10 jenkins jenkins 4096 Mar 23 16:17 ..
+-rw-r--r--  1 jenkins jenkins  967 Mar 23 12:45 1-Jenkinsfile
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 23 12:45 aws
+-rw-r--r--  1 jenkins jenkins  481 Mar 24 10:38 docker-compose.dist
+-rw-r--r--  1 jenkins jenkins  502 Mar 23 14:14 docker-compose.yml
+-rw-r--r--  1 jenkins jenkins  545 Mar 23 12:45 Dockerfile
+drwxr-xr-x  8 jenkins jenkins 4096 Mar 24 10:38 .git
+-rw-r--r--  1 jenkins jenkins  332 Mar 23 12:45 .gitignore
+-rw-r--r--  1 jenkins jenkins  745 Mar 24 10:27 Jenkinsfile
+-rw-r--r--  1 jenkins jenkins 1007 Mar 24 10:27 Jenkinsfile_ok_push
+-rw-r--r--  1 jenkins jenkins 1371 Mar 24 10:27 Jenkinsfile_ok_test_newman
+-rw-r--r--  1 jenkins jenkins 1260 Mar 23 13:28 Jenkinsfile_with_containers
+-rw-r--r--  1 jenkins jenkins 3195 Mar 23 12:45 pom.xml
+drwxr-xr-x  4 jenkins jenkins 4096 Mar 23 12:45 src
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 23 12:45 test-newman
+[Pipeline] sh
++ docker build -t alonsozy/final-project:10.0.1 .
+Sending build context to Docker daemon  182.8kB
+
+Step 1/17 : FROM maven:3.6.3-jdk-11-slim AS builder
+ ---> 2a41cd9e737b
+Step 2/17 : WORKDIR /calculadora
+ ---> Using cache
+ ---> a07d641ce9a7
+Step 3/17 : COPY pom.xml .
+ ---> Using cache
+ ---> 3db86637d276
+Step 4/17 : RUN mvn -B -e -C -T 1C org.apache.maven.plugins:maven-dependency-plugin:3.0.2:go-offline
+ ---> Using cache
+ ---> 79bfc130acc3
+Step 5/17 : COPY src ./src
+ ---> Using cache
+ ---> 3b9489273227
+Step 6/17 : RUN ls -la ./src
+ ---> Using cache
+ ---> ceaedaff9876
+Step 7/17 : RUN mvn clean package
+ ---> Using cache
+ ---> 6826a4a2d6d6
+Step 8/17 : RUN mvn jacoco:report
+ ---> Using cache
+ ---> a65494edf788
+Step 9/17 : RUN ls -la /calculadora
+ ---> Using cache
+ ---> 7a81dca7d8d7
+Step 10/17 : FROM openjdk:11.0.6-jdk
+ ---> d29dd615eaf4
+Step 11/17 : LABEL maintainer="alonsofisi@gmail.com"
+ ---> Using cache
+ ---> d0afce641ad3
+Step 12/17 : WORKDIR /workspace
+ ---> Using cache
+ ---> adc28e5fe4b1
+Step 13/17 : RUN ls -la /workspace
+ ---> Using cache
+ ---> af594a37a89d
+Step 14/17 : COPY --from=builder /calculadora/target/mitocode*calculator*.jar app.jar
+ ---> Using cache
+ ---> d967e17c14c9
+Step 15/17 : RUN ls -la /workspace
+ ---> Using cache
+ ---> eec049a476c3
+Step 16/17 : ENTRYPOINT exec java -jar /workspace/app.jar
+ ---> Using cache
+ ---> a2fe8a15cc67
+Step 17/17 : EXPOSE 8080
+ ---> Using cache
+ ---> a4b223edecc9
+Successfully built a4b223edecc9
+Successfully tagged alonsozy/final-project:10.0.1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Image for test With Newman)
+[Pipeline] sh
++ docker build -t alonsozy/test-newman:10.0.1 ./test-newman/
+Sending build context to Docker daemon  14.85kB
+
+Step 1/5 : FROM node:12.2.0-alpine
+ ---> f391dabf9dce
+Step 2/5 : ENV URL_SERVER=http://192.168.99.100:8080
+ ---> Using cache
+ ---> d66b91eb4185
+Step 3/5 : COPY calculator-collection.json .
+ ---> Using cache
+ ---> 2448c2fccf83
+Step 4/5 : RUN npm install -g newman
+ ---> Using cache
+ ---> 5bbc8f42589f
+Step 5/5 : ENTRYPOINT newman run calculator-collection.json  --global-var url_server=${URL_SERVER}
+ ---> Using cache
+ ---> 8b438aadfce1
+Successfully built 8b438aadfce1
+Successfully tagged alonsozy/test-newman:10.0.1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Generate docker-compose.yml)
+[Pipeline] echo
+Generate a docker-compose file
+[Pipeline] sh
++ sed -i s@{{APP_DOCKER_IMAGE}}@alonsozy/final-project:10.0.1@g docker-compose.dist
+[Pipeline] sh
++ sed -i s@{{NEWMAN_DOCKER_IMAGE}}@alonsozy/test-newman:10.0.1@g docker-compose.dist
+[Pipeline] sh
++ sed -i s@{{HOST_APP}}@192.168.131.129@g docker-compose.dist
+[Pipeline] sh
++ cat docker-compose.dist
+version: '3.1'
+
+services:
+  api-calculador:
+    image: alonsozy/final-project:10.0.1
+    build: ./
+    restart: always
+    networks:
+      - apiCalculadora
+    ports:
+      - 1080:8080
+
+  test-newman:
+    image: alonsozy/test-newman:10.0.1
+    build: ./test-newman/
+    environment:
+      URL_SERVER: http://192.168.131.129:1080
+    restart: always
+    depends_on:
+      - api-calculador
+    restart: on-failure
+    networks:
+      - apiCalculadora
+
+
+networks:
+  apiCalculadora:
+    driver: bridge
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Executing docker-compose)
+[Pipeline] sh
++ docker-compose -f docker-compose.dist up -d
+apici_api-calculador_1 is up-to-date
+Starting apici_test-newman_1 ... 
+Starting apici_test-newman_1
+[1A[2K
+Starting apici_test-newman_1 ... [32mdone[0m
+[1B
+[Pipeline] sh
++ sleep 20
+[Pipeline] sh
++ docker-compose -f docker-compose.dist ps
+         Name                       Command               State            Ports         
+-----------------------------------------------------------------------------------------
+apici_api-calculador_1   /bin/sh -c exec java -jar  ...   Up       0.0.0.0:1080->8080/tcp
+apici_test-newman_1      /bin/sh -c newman run calc ...   Exit 0                         
+[Pipeline] echo
+*********** LOGS DEL SERVICE TEST-NEWMAN ********************
+[Pipeline] sh
++ docker-compose logs test-newman
+Attaching to apici_test-newman_1
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   2. response is ok v1 
+[36mtest-newman_1     |[0m   3. response is ok v2 
+[36mtest-newman_1     |[0m   4. Response time is less than 200ms
+[36mtest-newman_1     |[0m   5. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   7. Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   9. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  11. response is OK
+[36mtest-newman_1     |[0m  12. Response time is less than 200ms
+[36mtest-newman_1     |[0m  13. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  15. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  17. With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  19. response is OK
+[36mtest-newman_1     |[0m  20. Response time is less than 200ms
+[36mtest-newman_1     |[0m  21. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  23. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  25. response is OK
+[36mtest-newman_1     |[0m  26. Response time is less than 200ms
+[36mtest-newman_1     |[0m  27. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  29. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  31. response is OK
+[36mtest-newman_1     |[0m  32. Response time is less than 200ms
+[36mtest-newman_1     |[0m  33. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬──────────┬──────────┐
+[36mtest-newman_1     |[0m │                         │ executed │   failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              iterations │        1 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │                requests │       11 │       11 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │            test-scripts │       11 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │        0 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              assertions │       22 │       22 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴──────────┴──────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1268ms                    │
+[36mtest-newman_1     |[0m ├───────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 0B (approx)              │
+[36mtest-newman_1     |[0m └───────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m    #  failure         detail                                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  01.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  02.  AssertionError  response is ok v1                                                         
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  03.  AssertionError  response is ok v2                                                         
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  04.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  05.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:3 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  06.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  07.  AssertionError  Path not found                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'NOT FOUND' but got 'UNDEFINED'   
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  08.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  09.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  10.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  11.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  12.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  13.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  14.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  15.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  16.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  17.  AssertionError  With Zero                                                                 
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  18.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  19.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  20.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  21.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  22.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  23.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  24.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  25.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  26.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  27.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  28.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  29.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  30.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  31.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  32.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  33.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   2. response is ok v1 
+[36mtest-newman_1     |[0m   3. response is ok v2 
+[36mtest-newman_1     |[0m   4. Response time is less than 200ms
+[36mtest-newman_1     |[0m   5. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   7. Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   9. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  11. response is OK
+[36mtest-newman_1     |[0m  12. Response time is less than 200ms
+[36mtest-newman_1     |[0m  13. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  15. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  17. With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  19. response is OK
+[36mtest-newman_1     |[0m  20. Response time is less than 200ms
+[36mtest-newman_1     |[0m  21. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  23. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  25. response is OK
+[36mtest-newman_1     |[0m  26. Response time is less than 200ms
+[36mtest-newman_1     |[0m  27. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  29. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  31. response is OK
+[36mtest-newman_1     |[0m  32. Response time is less than 200ms
+[36mtest-newman_1     |[0m  33. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬──────────┬──────────┐
+[36mtest-newman_1     |[0m │                         │ executed │   failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              iterations │        1 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │                requests │       11 │       11 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │            test-scripts │       11 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │        0 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              assertions │       22 │       22 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴──────────┴──────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1277ms                    │
+[36mtest-newman_1     |[0m ├───────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 0B (approx)              │
+[36mtest-newman_1     |[0m └───────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m    #  failure         detail                                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  01.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  02.  AssertionError  response is ok v1                                                         
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  03.  AssertionError  response is ok v2                                                         
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  04.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  05.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:3 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  06.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  07.  AssertionError  Path not found                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'NOT FOUND' but got 'UNDEFINED'   
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  08.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  09.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  10.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  11.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  12.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  13.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  14.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  15.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  16.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  17.  AssertionError  With Zero                                                                 
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  18.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  19.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  20.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  21.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  22.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  23.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  24.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  25.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  26.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  27.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  28.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  29.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  30.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  31.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  32.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  33.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   2. response is ok v1 
+[36mtest-newman_1     |[0m   3. response is ok v2 
+[36mtest-newman_1     |[0m   4. Response time is less than 200ms
+[36mtest-newman_1     |[0m   5. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   7. Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   9. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  11. response is OK
+[36mtest-newman_1     |[0m  12. Response time is less than 200ms
+[36mtest-newman_1     |[0m  13. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  15. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  17. With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  19. response is OK
+[36mtest-newman_1     |[0m  20. Response time is less than 200ms
+[36mtest-newman_1     |[0m  21. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  23. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  25. response is OK
+[36mtest-newman_1     |[0m  26. Response time is less than 200ms
+[36mtest-newman_1     |[0m  27. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  29. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  31. response is OK
+[36mtest-newman_1     |[0m  32. Response time is less than 200ms
+[36mtest-newman_1     |[0m  33. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬──────────┬──────────┐
+[36mtest-newman_1     |[0m │                         │ executed │   failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              iterations │        1 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │                requests │       11 │       11 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │            test-scripts │       11 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │        0 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              assertions │       22 │       22 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴──────────┴──────────┤
+[36mtest-newman_1     |[0m │ total run duration: 2.3s                      │
+[36mtest-newman_1     |[0m ├───────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 0B (approx)              │
+[36mtest-newman_1     |[0m └───────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m    #  failure         detail                                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  01.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  02.  AssertionError  response is ok v1                                                         
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  03.  AssertionError  response is ok v2                                                         
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  04.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  05.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:3 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  06.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  07.  AssertionError  Path not found                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'NOT FOUND' but got 'UNDEFINED'   
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  08.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  09.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  10.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  11.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  12.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  13.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  14.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  15.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  16.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  17.  AssertionError  With Zero                                                                 
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  18.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  19.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  20.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  21.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  22.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  23.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  24.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  25.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  26.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  27.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  28.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  29.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  30.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  31.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  32.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  33.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   2. response is ok v1 
+[36mtest-newman_1     |[0m   3. response is ok v2 
+[36mtest-newman_1     |[0m   4. Response time is less than 200ms
+[36mtest-newman_1     |[0m   5. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   7. Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m   9. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  11. response is OK
+[36mtest-newman_1     |[0m  12. Response time is less than 200ms
+[36mtest-newman_1     |[0m  13. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  15. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  17. With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  19. response is OK
+[36mtest-newman_1     |[0m  20. Response time is less than 200ms
+[36mtest-newman_1     |[0m  21. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  23. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  25. response is OK
+[36mtest-newman_1     |[0m  26. Response time is less than 200ms
+[36mtest-newman_1     |[0m  27. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  29. Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [errored]
+[36mtest-newman_1     |[0m      socket hang up
+[36mtest-newman_1     |[0m  31. response is OK
+[36mtest-newman_1     |[0m  32. Response time is less than 200ms
+[36mtest-newman_1     |[0m  33. Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬──────────┬──────────┐
+[36mtest-newman_1     |[0m │                         │ executed │   failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              iterations │        1 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │                requests │       11 │       11 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │            test-scripts │       11 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │        0 │        0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼──────────┼──────────┤
+[36mtest-newman_1     |[0m │              assertions │       22 │       22 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴──────────┴──────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1274ms                    │
+[36mtest-newman_1     |[0m ├───────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 0B (approx)              │
+[36mtest-newman_1     |[0m └───────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m    #  failure         detail                                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  01.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  02.  AssertionError  response is ok v1                                                         
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  03.  AssertionError  response is ok v2                                                         
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  04.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  05.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:3 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  06.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  07.  AssertionError  Path not found                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'NOT FOUND' but got 'UNDEFINED'   
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_found"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  08.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  09.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "add_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  10.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  11.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  12.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  13.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  14.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  15.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  16.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  17.  AssertionError  With Zero                                                                 
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "div_with_zero"                                                    
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  18.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  19.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  20.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  21.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  22.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  23.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "mul_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  24.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  25.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  26.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  27.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_ok"                                                           
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  28.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  29.  AssertionError  Not Numbers                                                               
+[36mtest-newman_1     |[0m                       expected response to have status reason 'BAD REQUEST' but got 'UNDEFINED' 
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "sub_not_numbers"                                                  
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  30.  Error                                                                                     
+[36mtest-newman_1     |[0m                       socket hang up                                                            
+[36mtest-newman_1     |[0m                       at request                                                                
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  31.  AssertionError  response is OK                                                            
+[36mtest-newman_1     |[0m                       expected response to have status reason 'OK' but got 'UNDEFINED'          
+[36mtest-newman_1     |[0m                       at assertion:0 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  32.  AssertionError  Response time is less than 200ms                                          
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:1 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m                                                                                                 
+[36mtest-newman_1     |[0m  33.  AssertionError  Response from server                                                      
+[36mtest-newman_1     |[0m                       expected { Object (id, _details, ...) } to have property 'code'           
+[36mtest-newman_1     |[0m                       at assertion:2 in test-script                                             
+[36mtest-newman_1     |[0m                       inside "hello"                                                            
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [200 OK, 266B, 703ms]
+[36mtest-newman_1     |[0m   ✓  response is ok v1 
+[36mtest-newman_1     |[0m   ✓  response is ok v2 
+[36mtest-newman_1     |[0m   1. Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [404 Not Found, 395B, 252ms]
+[36mtest-newman_1     |[0m   ✓  Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [400 Bad Request, 512B, 74ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [200 OK, 264B, 22ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [400 Bad Request, 512B, 26ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [500 Internal Server Error, 377B, 85ms]
+[36mtest-newman_1     |[0m   ✓  With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [200 OK, 265B, 18ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [400 Bad Request, 512B, 34ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [200 OK, 264B, 17ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [400 Bad Request, 512B, 33ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [200 OK, 268B, 14ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬────────────────────┬────────────────────┐
+[36mtest-newman_1     |[0m │                         │           executed │             failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼────────────────────┼────────────────────┤
+[36mtest-newman_1     |[0m │              iterations │                  1 │                  0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼────────────────────┼────────────────────┤
+[36mtest-newman_1     |[0m │                requests │                 11 │                  0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼────────────────────┼────────────────────┤
+[36mtest-newman_1     |[0m │            test-scripts │                 11 │                  0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼────────────────────┼────────────────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │                  0 │                  0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼────────────────────┼────────────────────┤
+[36mtest-newman_1     |[0m │              assertions │                 22 │                  1 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴────────────────────┴────────────────────┤
+[36mtest-newman_1     |[0m │ total run duration: 2.2s                                          │
+[36mtest-newman_1     |[0m ├───────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 1.41KB (approx)                              │
+[36mtest-newman_1     |[0m ├───────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ average response time: 116ms [min: 14ms, max: 703ms, s.d.: 196ms] │
+[36mtest-newman_1     |[0m └───────────────────────────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m   #  failure         detail                           
+[36mtest-newman_1     |[0m                                                       
+[36mtest-newman_1     |[0m  1.  AssertionError  Response time is less than 200ms 
+[36mtest-newman_1     |[0m                      expected 703 to be below 200     
+[36mtest-newman_1     |[0m                      at assertion:2 in test-script    
+[36mtest-newman_1     |[0m                      inside "add_ok"                  
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [200 OK, 266B, 119ms]
+[36mtest-newman_1     |[0m   ✓  response is ok v1 
+[36mtest-newman_1     |[0m   ✓  response is ok v2 
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [404 Not Found, 395B, 70ms]
+[36mtest-newman_1     |[0m   ✓  Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [400 Bad Request, 512B, 22ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [200 OK, 264B, 13ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [400 Bad Request, 512B, 12ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [500 Internal Server Error, 377B, 29ms]
+[36mtest-newman_1     |[0m   ✓  With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [200 OK, 265B, 10ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [400 Bad Request, 512B, 9ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [200 OK, 264B, 10ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [400 Bad Request, 512B, 15ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [200 OK, 268B, 14ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬───────────────────┬──────────────────┐
+[36mtest-newman_1     |[0m │                         │          executed │           failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼──────────────────┤
+[36mtest-newman_1     |[0m │              iterations │                 1 │                0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼──────────────────┤
+[36mtest-newman_1     |[0m │                requests │                11 │                0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼──────────────────┤
+[36mtest-newman_1     |[0m │            test-scripts │                11 │                0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼──────────────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │                 0 │                0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼──────────────────┤
+[36mtest-newman_1     |[0m │              assertions │                22 │                0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴───────────────────┴──────────────────┤
+[36mtest-newman_1     |[0m │ total run duration: 748ms                                      │
+[36mtest-newman_1     |[0m ├────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 1.41KB (approx)                           │
+[36mtest-newman_1     |[0m ├────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ average response time: 29ms [min: 9ms, max: 119ms, s.d.: 32ms] │
+[36mtest-newman_1     |[0m └────────────────────────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [200 OK, 266B, 208ms]
+[36mtest-newman_1     |[0m   ✓  response is ok v1 
+[36mtest-newman_1     |[0m   ✓  response is ok v2 
+[36mtest-newman_1     |[0m   1. Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [404 Not Found, 395B, 79ms]
+[36mtest-newman_1     |[0m   ✓  Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [400 Bad Request, 512B, 19ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [200 OK, 264B, 17ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [400 Bad Request, 512B, 30ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [500 Internal Server Error, 377B, 25ms]
+[36mtest-newman_1     |[0m   ✓  With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [200 OK, 265B, 18ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [400 Bad Request, 512B, 20ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [200 OK, 264B, 22ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [400 Bad Request, 512B, 24ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [200 OK, 268B, 24ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬───────────────────┬───────────────────┐
+[36mtest-newman_1     |[0m │                         │          executed │            failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              iterations │                 1 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │                requests │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │            test-scripts │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │                 0 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              assertions │                22 │                 1 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴───────────────────┴───────────────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1255ms                                      │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 1.41KB (approx)                            │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ average response time: 44ms [min: 17ms, max: 208ms, s.d.: 54ms] │
+[36mtest-newman_1     |[0m └─────────────────────────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m   #  failure         detail                           
+[36mtest-newman_1     |[0m                                                       
+[36mtest-newman_1     |[0m  1.  AssertionError  Response time is less than 200ms 
+[36mtest-newman_1     |[0m                      expected 208 to be below 200     
+[36mtest-newman_1     |[0m                      at assertion:2 in test-script    
+[36mtest-newman_1     |[0m                      inside "add_ok"                  
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [200 OK, 266B, 194ms]
+[36mtest-newman_1     |[0m   ✓  response is ok v1 
+[36mtest-newman_1     |[0m   ✓  response is ok v2 
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [404 Not Found, 395B, 41ms]
+[36mtest-newman_1     |[0m   ✓  Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [400 Bad Request, 512B, 17ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [200 OK, 264B, 11ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [400 Bad Request, 512B, 23ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [500 Internal Server Error, 377B, 27ms]
+[36mtest-newman_1     |[0m   ✓  With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [200 OK, 265B, 17ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [400 Bad Request, 512B, 18ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [200 OK, 264B, 15ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [400 Bad Request, 512B, 25ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [200 OK, 268B, 20ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬───────────────────┬───────────────────┐
+[36mtest-newman_1     |[0m │                         │          executed │            failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              iterations │                 1 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │                requests │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │            test-scripts │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │                 0 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              assertions │                22 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴───────────────────┴───────────────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1003ms                                      │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 1.41KB (approx)                            │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ average response time: 37ms [min: 11ms, max: 194ms, s.d.: 50ms] │
+[36mtest-newman_1     |[0m └─────────────────────────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [200 OK, 266B, 234ms]
+[36mtest-newman_1     |[0m   ✓  response is ok v1 
+[36mtest-newman_1     |[0m   ✓  response is ok v2 
+[36mtest-newman_1     |[0m   1. Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [404 Not Found, 395B, 79ms]
+[36mtest-newman_1     |[0m   ✓  Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [400 Bad Request, 512B, 27ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [200 OK, 264B, 19ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [400 Bad Request, 512B, 23ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [500 Internal Server Error, 377B, 43ms]
+[36mtest-newman_1     |[0m   ✓  With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [200 OK, 265B, 18ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [400 Bad Request, 512B, 18ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [200 OK, 264B, 17ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [400 Bad Request, 512B, 16ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [200 OK, 268B, 15ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬───────────────────┬───────────────────┐
+[36mtest-newman_1     |[0m │                         │          executed │            failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              iterations │                 1 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │                requests │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │            test-scripts │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │                 0 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              assertions │                22 │                 1 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴───────────────────┴───────────────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1284ms                                      │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 1.41KB (approx)                            │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ average response time: 46ms [min: 15ms, max: 234ms, s.d.: 62ms] │
+[36mtest-newman_1     |[0m └─────────────────────────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m   #  failure         detail                           
+[36mtest-newman_1     |[0m                                                       
+[36mtest-newman_1     |[0m  1.  AssertionError  Response time is less than 200ms 
+[36mtest-newman_1     |[0m                      expected 234 to be below 200     
+[36mtest-newman_1     |[0m                      at assertion:2 in test-script    
+[36mtest-newman_1     |[0m                      inside "add_ok"                  
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [200 OK, 266B, 201ms]
+[36mtest-newman_1     |[0m   ✓  response is ok v1 
+[36mtest-newman_1     |[0m   ✓  response is ok v2 
+[36mtest-newman_1     |[0m   1. Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [404 Not Found, 395B, 13ms]
+[36mtest-newman_1     |[0m   ✓  Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [400 Bad Request, 512B, 27ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [200 OK, 264B, 29ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [400 Bad Request, 512B, 32ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [500 Internal Server Error, 377B, 27ms]
+[36mtest-newman_1     |[0m   ✓  With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [200 OK, 265B, 11ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [400 Bad Request, 512B, 18ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [200 OK, 264B, 15ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [400 Bad Request, 512B, 17ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [200 OK, 268B, 16ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬───────────────────┬───────────────────┐
+[36mtest-newman_1     |[0m │                         │          executed │            failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              iterations │                 1 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │                requests │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │            test-scripts │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │                 0 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              assertions │                22 │                 1 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴───────────────────┴───────────────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1064ms                                      │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 1.41KB (approx)                            │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ average response time: 36ms [min: 11ms, max: 201ms, s.d.: 52ms] │
+[36mtest-newman_1     |[0m └─────────────────────────────────────────────────────────────────┘
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m   #  failure         detail                           
+[36mtest-newman_1     |[0m                                                       
+[36mtest-newman_1     |[0m  1.  AssertionError  Response time is less than 200ms 
+[36mtest-newman_1     |[0m                      expected 201 to be below 200     
+[36mtest-newman_1     |[0m                      at assertion:2 in test-script    
+[36mtest-newman_1     |[0m                      inside "add_ok"                  
+[36mtest-newman_1     |[0m newman
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m collection-calculator
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/50/58 [200 OK, 266B, 181ms]
+[36mtest-newman_1     |[0m   ✓  response is ok v1 
+[36mtest-newman_1     |[0m   ✓  response is ok v2 
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_found
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add2/50/58 [404 Not Found, 395B, 59ms]
+[36mtest-newman_1     |[0m   ✓  Path not found 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → add_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/add/X/Y [400 Bad Request, 512B, 39ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/50/5 [200 OK, 264B, 20ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/A/B [400 Bad Request, 512B, 26ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → div_with_zero
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/div/15/0 [500 Internal Server Error, 377B, 33ms]
+[36mtest-newman_1     |[0m   ✓  With Zero 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/50/5 [200 OK, 265B, 18ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → mul_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/mul/Z/Y [400 Bad Request, 512B, 22ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_ok
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/50/5 [200 OK, 264B, 17ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → sub_not_numbers
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/sub/A/B [400 Bad Request, 512B, 18ms]
+[36mtest-newman_1     |[0m   ✓  Not Numbers 
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m → hello
+[36mtest-newman_1     |[0m   GET http://192.168.131.129:1080/api/whoami [200 OK, 268B, 16ms]
+[36mtest-newman_1     |[0m   ✓  response is OK
+[36mtest-newman_1     |[0m   ✓  Response time is less than 200ms
+[36mtest-newman_1     |[0m   ✓  Response from server
+[36mtest-newman_1     |[0m 
+[36mtest-newman_1     |[0m ┌─────────────────────────┬───────────────────┬───────────────────┐
+[36mtest-newman_1     |[0m │                         │          executed │            failed │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              iterations │                 1 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │                requests │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │            test-scripts │                11 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │      prerequest-scripts │                 0 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┼───────────────────┼───────────────────┤
+[36mtest-newman_1     |[0m │              assertions │                22 │                 0 │
+[36mtest-newman_1     |[0m ├─────────────────────────┴───────────────────┴───────────────────┤
+[36mtest-newman_1     |[0m │ total run duration: 1087ms                                      │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ total data received: 1.41KB (approx)                            │
+[36mtest-newman_1     |[0m ├─────────────────────────────────────────────────────────────────┤
+[36mtest-newman_1     |[0m │ average response time: 40ms [min: 16ms, max: 181ms, s.d.: 46ms] │
+[36mtest-newman_1     |[0m └─────────────────────────────────────────────────────────────────┘
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

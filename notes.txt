@@ -1,0 +1,23 @@
+1   La version de Spring Boot 2.2.4 se puede ver en el pom.xml 
+
+2   Las pruebas unitarias para REST a las API tomando como referencia la guia solicitada esta en la ruta: 
+    final_project\src\test\java
+
+3   Los cambios en el pom para poder empaquetar en una imagen con JDK 11
+
+4   Se creo el file docker-compose.yml para el ambiente efimero 
+
+5   La serie de pruebas con Postamn y el json importado estan en la ruta: final_project\test-newman\
+    Su Dockerfile esta en la misma ruta para poder ejecutar el set de pruebas con newman pasando como parametro la url de la aplicacion
+    Ejemplo:    docker build -t test-newman:1.0.3 .
+                docker run -e URL_SERVER=http://192.168.99.100:8080 test-newman:1.0.3
+
+6   El file de CloudFormation para crear un servidor Jenkins en AWS esta en la ruta:
+    aws/aws-ec2-public-jenkins.yml
+    Se ajusto para que la AMI por defecto sea t2-micro ya que esta se encuentra en la capa free
+
+7   Se creo el pipeline para la fase de construcción y pruebas con newman los archivos utilizados son:
+    docker-compose.dist: plantilla para construir el ambiente efimero 
+    Jenkinsfile_ok_test_newman
+    evidencias en la carpeta: punto7_evidencias
+    
