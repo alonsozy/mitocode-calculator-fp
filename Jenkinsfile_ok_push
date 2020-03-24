@@ -26,9 +26,10 @@ pipeline{
 		stage('Pushing images..'){
 			steps{
 				echo 'Autentificacion'
-				sh 'docker login --username=${USER_DOCKER} --password=${PASS_DOCKER}'
-				sh "docker push ${APP_DOCKER_IMAGE}"
-				sh "docker push ${NEWMAN_DOCKER_IMAGE}"
+				withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                    sh "docker push ${APP_DOCKER_IMAGE}"
+				    sh "docker push ${NEWMAN_DOCKER_IMAGE}"
+                }
                 sh "docker rmi ${APP_DOCKER_IMAGE}"
 				sh "docker rmi ${NEWMAN_DOCKER_IMAGE}"
 			}
