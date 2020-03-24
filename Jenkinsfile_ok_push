@@ -6,8 +6,8 @@ pipeline{
 	environment {
 	    APP_DOCKER_IMAGE = "${params.APP_DOCKER_IMAGE}"
 	    NEWMAN_DOCKER_IMAGE = "${params.NEWMAN_DOCKER_IMAGE}"
-		USER_DOCKER = "${params.USER_DOCKER}"
-		PASS_DOCKER = "${params.PASS_DOCKER}"
+		//USER_DOCKER = "${params.USER_DOCKER}"
+		//PASS_DOCKER = "${params.PASS_DOCKER}"
 	}
 	stages {
 	    stage('Build Image of Calculator') {
