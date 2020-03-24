@@ -9,9 +9,6 @@ pipeline{
 	}
 	stages {
 	    stage('Construyendo el app Calculadora ...'){
-			agent{
-				docker{ image 'maven:3.6.3-jdk-11-slim'}
-			}
 			steps{
 				sh 'mvn clean package'
 				sh 'ls -la target'
