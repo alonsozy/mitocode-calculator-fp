@@ -21,4 +21,11 @@
     Jenkinsfile_ok_test_newman
     evidencias en la carpeta: punto7_evidencias
 
-8
+8   Se creo el pipeline para la construcción y publicación en dockerhub, se configuro la credenial de dockerhub
+    en el jenkins, los archivos utilizados son:
+    Jenkinsfile_ok_push
+    evidencias en la carpeta: punto8_evidencias
+
+9   Se creo el pipeline para la fase de construcción y almacenado del jar en los artefactos del jenkins, los archivos utilizados son: 
+    Jenkinsfile
+    evidencias en la carpeta: punto9_evidencias

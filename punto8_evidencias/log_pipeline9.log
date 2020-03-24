@@ -1,0 +1,212 @@
+Started by user root
+Obtained Jenkinsfile_ok_push from git https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/pushing_images
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+using credential 382efd05-aded-4c29-b766-7f8aae520975
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git # timeout=10
+Fetching upstream changes from https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+ > git --version # timeout=10
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --progress -- https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 644b5fe870d6047c6053444eb34ddba863a7ddbe (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 644b5fe870d6047c6053444eb34ddba863a7ddbe # timeout=10
+Commit message: "fix"
+ > git rev-list --no-walk 3ca46a2a4822ba2dc19a074f480b508957d33cf1 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Build Image of Calculator)
+[Pipeline] echo
+Building ${APP_DOCKER_IMAGE}
+[Pipeline] sh
++ ls -la
+total 80
+drwxr-xr-x  9 jenkins jenkins 4096 Mar 24 16:17 .
+drwxr-xr-x 10 jenkins jenkins 4096 Mar 23 16:17 ..
+-rw-r--r--  1 jenkins jenkins  967 Mar 23 14:28 1-Jenkinsfile
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 24 16:11 aws
+-rw-r--r--  1 jenkins jenkins  481 Mar 23 14:29 docker-compose.dist
+-rw-r--r--  1 jenkins jenkins  502 Mar 23 14:28 docker-compose.yml
+-rw-r--r--  1 jenkins jenkins  545 Mar 23 14:28 Dockerfile
+drwxr-xr-x  8 jenkins jenkins 4096 Mar 24 16:17 .git
+-rw-r--r--  1 jenkins jenkins  332 Mar 23 14:28 .gitignore
+-rw-r--r--  1 jenkins jenkins  745 Mar 24 16:11 Jenkinsfile
+-rw-r--r--  1 jenkins jenkins 1041 Mar 24 16:17 Jenkinsfile_ok_push
+-rw-r--r--  1 jenkins jenkins 1371 Mar 24 16:11 Jenkinsfile_ok_test_newman
+-rw-r--r--  1 jenkins jenkins 1260 Mar 23 14:28 Jenkinsfile_with_containers
+-rw-r--r--  1 jenkins jenkins 1194 Mar 24 16:11 notes.txt
+-rw-r--r--  1 jenkins jenkins 3195 Mar 23 14:28 pom.xml
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 24 16:11 punto7_evidencias
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 24 16:17 punto8_evidencias
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 24 16:11 punto9_evidencias
+drwxr-xr-x  4 jenkins jenkins 4096 Mar 23 14:28 src
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 23 14:28 test-newman
+[Pipeline] sh
++ docker build -t alonsozy/final-project:11.0.1 .
+Sending build context to Docker daemon   1.87MB
+
+Step 1/17 : FROM maven:3.6.3-jdk-11-slim AS builder
+ ---> 2a41cd9e737b
+Step 2/17 : WORKDIR /calculadora
+ ---> Using cache
+ ---> a07d641ce9a7
+Step 3/17 : COPY pom.xml .
+ ---> Using cache
+ ---> 3db86637d276
+Step 4/17 : RUN mvn -B -e -C -T 1C org.apache.maven.plugins:maven-dependency-plugin:3.0.2:go-offline
+ ---> Using cache
+ ---> 79bfc130acc3
+Step 5/17 : COPY src ./src
+ ---> Using cache
+ ---> 3b9489273227
+Step 6/17 : RUN ls -la ./src
+ ---> Using cache
+ ---> ceaedaff9876
+Step 7/17 : RUN mvn clean package
+ ---> Using cache
+ ---> 6826a4a2d6d6
+Step 8/17 : RUN mvn jacoco:report
+ ---> Using cache
+ ---> a65494edf788
+Step 9/17 : RUN ls -la /calculadora
+ ---> Using cache
+ ---> 7a81dca7d8d7
+Step 10/17 : FROM openjdk:11.0.6-jdk
+ ---> d29dd615eaf4
+Step 11/17 : LABEL maintainer="alonsofisi@gmail.com"
+ ---> Using cache
+ ---> d0afce641ad3
+Step 12/17 : WORKDIR /workspace
+ ---> Using cache
+ ---> adc28e5fe4b1
+Step 13/17 : RUN ls -la /workspace
+ ---> Using cache
+ ---> af594a37a89d
+Step 14/17 : COPY --from=builder /calculadora/target/mitocode*calculator*.jar app.jar
+ ---> Using cache
+ ---> d967e17c14c9
+Step 15/17 : RUN ls -la /workspace
+ ---> Using cache
+ ---> eec049a476c3
+Step 16/17 : ENTRYPOINT exec java -jar /workspace/app.jar
+ ---> Using cache
+ ---> a2fe8a15cc67
+Step 17/17 : EXPOSE 8080
+ ---> Using cache
+ ---> a4b223edecc9
+Successfully built a4b223edecc9
+Successfully tagged alonsozy/final-project:11.0.1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Image for test With Newman)
+[Pipeline] echo
+Building ${NEWMAN_DOCKER_IMAGE}
+[Pipeline] sh
++ docker build -t alonsozy/test-newman:11.0.1 ./test-newman/
+Sending build context to Docker daemon  14.85kB
+
+Step 1/5 : FROM node:12.2.0-alpine
+ ---> f391dabf9dce
+Step 2/5 : ENV URL_SERVER=http://192.168.99.100:8080
+ ---> Using cache
+ ---> d66b91eb4185
+Step 3/5 : COPY calculator-collection.json .
+ ---> Using cache
+ ---> 2448c2fccf83
+Step 4/5 : RUN npm install -g newman
+ ---> Using cache
+ ---> 5bbc8f42589f
+Step 5/5 : ENTRYPOINT newman run calculator-collection.json  --global-var url_server=${URL_SERVER}
+ ---> Using cache
+ ---> 8b438aadfce1
+Successfully built 8b438aadfce1
+Successfully tagged alonsozy/test-newman:11.0.1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pushing images..)
+[Pipeline] echo
+Autentificacion
+[Pipeline] withDockerRegistry
+Using the existing docker config file.Removing blacklisted property: auths$ docker login -u alonsozy -p ******** https://index.docker.io/v1/
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /var/lib/jenkins/workspace/pushing_images@tmp/68231ff7-748c-43b0-9eae-d166c99c0469/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] {
+[Pipeline] sh
++ docker push alonsozy/final-project:11.0.1
+The push refers to repository [docker.io/alonsozy/final-project]
+bec22db7e036: Preparing
+33dfed90ce4d: Preparing
+4186db990701: Preparing
+5b5fbf48ec75: Preparing
+832f129ebea4: Preparing
+6670e930ed33: Preparing
+c7f27a4eb870: Preparing
+e70dfb4c3a48: Preparing
+1c76bd0dc325: Preparing
+6670e930ed33: Waiting
+c7f27a4eb870: Waiting
+e70dfb4c3a48: Waiting
+1c76bd0dc325: Waiting
+4186db990701: Layer already exists
+33dfed90ce4d: Layer already exists
+bec22db7e036: Layer already exists
+5b5fbf48ec75: Layer already exists
+832f129ebea4: Layer already exists
+c7f27a4eb870: Layer already exists
+e70dfb4c3a48: Layer already exists
+6670e930ed33: Layer already exists
+1c76bd0dc325: Layer already exists
+11.0.1: digest: sha256:c373703ac59b137cb072c4f29cea5d15c2c204688c3ad2156c1a5a8551b47fbb size: 2213
+[Pipeline] sh
++ docker push alonsozy/test-newman:11.0.1
+The push refers to repository [docker.io/alonsozy/test-newman]
+db1c7407bfd4: Preparing
+2dd2f96d9739: Preparing
+917da41f96aa: Preparing
+7d6e2801765d: Preparing
+f1b5933fe4b5: Preparing
+2dd2f96d9739: Layer already exists
+f1b5933fe4b5: Layer already exists
+7d6e2801765d: Layer already exists
+917da41f96aa: Layer already exists
+db1c7407bfd4: Pushed
+11.0.1: digest: sha256:5f9e1ef1631d2ce9e74eb245fce85ac6cebba85eee814dd4c51c83e6b856a609 size: 1371
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] sh
++ docker rmi alonsozy/final-project:11.0.1
+Untagged: alonsozy/final-project:11.0.1
+[Pipeline] sh
++ docker rmi alonsozy/test-newman:11.0.1
+Untagged: alonsozy/test-newman:11.0.1
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
