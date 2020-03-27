@@ -9,7 +9,7 @@ public class SimpleCalculatorController {
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, value = "/whoami", produces = "text/plain")
-    @ApiOperation("Says whoami ")
+    @ApiOperation("Says whoami - version Alonso")
     public String whoami() {
         String hostname = System.getenv().getOrDefault("HOSTNAME", "Unknown");
         return String.format("Hi %s", hostname);
