@@ -1,0 +1,13 @@
+version: "3"
+services:
+  api:
+    image: alonsozy/final-project:11.0.1
+    deploy:
+      replicas: 1
+    ports:
+      - 1080:8080
+    networks:
+      - api-calc
+
+networks:
+  api-calc:

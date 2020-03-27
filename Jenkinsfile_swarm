@@ -1,0 +1,27 @@
+author='AlonsoZY'
+versionApp='1.0.0'
+
+pipeline{
+    environment {
+        STACK_NAME="${params.STACK_NAME}"
+        SERVICE_APP="${STACK_NAME}_api"
+        IMAGE_VERSION="${params.IMAGE_VERSION}"
+        DEPLOY_BACKEND="${params.DEPLOY_BACKEND}"
+        APLICATION_SERVER="${parmas.APLICATION_SERVER}"
+        APLICATION_PEM="/var/lib/jenkins/pems/test.pem"  //pegarlo en elservidor jenkins
+        INTERNAL_DOCKER_APP="alonsozy/final-project:${IMAGE_VERSION}"
+        
+    }
+    
+    stages {
+        
+        stage('Deploy stack app-calc') {
+ 			when {environment name:'DEPLOY_BACKEND', 'value':'yes'}
+			     steps{
+                     sh "ssh -o StrictHostKeyChecking=no -i ${APLICATION_PEM} ec2-user@${APLICATION_SERVER} \"docker service update --image ${INTERNAL_DOCKER_APP} ${SERVICE_APP}\""
+                 }
+			       
+        }
+        
+    }
+}
