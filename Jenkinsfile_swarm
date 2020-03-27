@@ -8,7 +8,7 @@ pipeline{
         SERVICE_APP="${STACK_NAME}_api"
         IMAGE_VERSION="${params.IMAGE_VERSION}"
         DEPLOY_BACKEND="${params.DEPLOY_BACKEND}"
-        APLICATION_SERVER="${parmas.APLICATION_SERVER}"
+        APLICATION_SERVER="${params.APLICATION_SERVER}"
         APLICATION_PEM="/var/lib/jenkins/pems/test.pem"  //pegarlo en elservidor jenkins
         INTERNAL_DOCKER_APP="alonsozy/final-project:${IMAGE_VERSION}"
         
