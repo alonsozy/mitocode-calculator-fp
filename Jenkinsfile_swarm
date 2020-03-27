@@ -9,7 +9,7 @@ pipeline{
         IMAGE_VERSION="${params.IMAGE_VERSION}"
         DEPLOY_BACKEND="${params.DEPLOY_BACKEND}"
         APLICATION_SERVER="${params.APLICATION_SERVER}"
-        APLICATION_PEM="/home/alonsozy/test.pem"  //pegarlo en elservidor jenkins
+        APLICATION_PEM="/var/lib/jenkins/pems/test.pem"  //pegarlo en elservidor jenkins
         INTERNAL_DOCKER_APP="alonsozy/final-project:${IMAGE_VERSION}"
         
     }
