@@ -1,7 +1,8 @@
-author='AlonsoZY'
-versionApp='1.0.0'
+author = 'AlonsoZY'
+versionApp = '0.0.0'
 
 pipeline{
+	agent any
     environment {
         STACK_NAME="${params.STACK_NAME}"
         SERVICE_APP="${STACK_NAME}_api"
