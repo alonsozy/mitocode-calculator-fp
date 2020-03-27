@@ -1,0 +1,602 @@
+Started by user root
+Obtained Jenkinsfile_ok_push from git https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/pushing_images
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+using credential 382efd05-aded-4c29-b766-7f8aae520975
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git # timeout=10
+Fetching upstream changes from https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git
+ > git --version # timeout=10
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --progress -- https://azevallosyapias@bitbucket.org/personal_mazy/mitocode-calculator-fp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision dd5bba809721c5dceac83873b8ed75fdf2c07cac (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f dd5bba809721c5dceac83873b8ed75fdf2c07cac # timeout=10
+Commit message: "v2"
+ > git rev-list --no-walk 644b5fe870d6047c6053444eb34ddba863a7ddbe # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Build Image of Calculator)
+[Pipeline] echo
+Building ${APP_DOCKER_IMAGE}
+[Pipeline] sh
++ ls -la
+total 92
+drwxr-xr-x 10 jenkins jenkins 4096 Mar 27 09:37 .
+drwxr-xr-x 12 jenkins jenkins 4096 Mar 26 23:39 ..
+-rw-r--r--  1 jenkins jenkins  967 Mar 23 14:28 1-Jenkinsfile
+-rw-r--r--  1 jenkins jenkins  183 Mar 27 09:37 app-swarm.yml
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 24 16:11 aws
+-rw-r--r--  1 jenkins jenkins  481 Mar 23 14:29 docker-compose.dist
+-rw-r--r--  1 jenkins jenkins  502 Mar 23 14:28 docker-compose.yml
+-rw-r--r--  1 jenkins jenkins  545 Mar 23 14:28 Dockerfile
+drwxr-xr-x  8 jenkins jenkins 4096 Mar 27 09:37 .git
+-rw-r--r--  1 jenkins jenkins  332 Mar 23 14:28 .gitignore
+-rw-r--r--  1 jenkins jenkins  745 Mar 24 16:11 Jenkinsfile
+-rw-r--r--  1 jenkins jenkins 1041 Mar 24 16:17 Jenkinsfile_ok_push
+-rw-r--r--  1 jenkins jenkins 1624 Mar 27 09:37 Jenkinsfile_ok_test_newman
+-rw-r--r--  1 jenkins jenkins  871 Mar 27 09:37 Jenkinsfile_swarm
+-rw-r--r--  1 jenkins jenkins 1260 Mar 23 14:28 Jenkinsfile_with_containers
+-rw-r--r--  1 jenkins jenkins 1627 Mar 27 09:37 notes.txt
+-rw-r--r--  1 jenkins jenkins 3195 Mar 23 14:28 pom.xml
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 27 09:37 punto10_evidencias
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 24 16:11 punto7_evidencias
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 27 09:37 punto8_evidencias
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 24 16:11 punto9_evidencias
+drwxr-xr-x  4 jenkins jenkins 4096 Mar 23 14:28 src
+drwxr-xr-x  2 jenkins jenkins 4096 Mar 23 14:28 test-newman
+[Pipeline] sh
++ docker build -t alonsozy/final-project:11.0.2 .
+Sending build context to Docker daemon  3.923MB
+
+Step 1/17 : FROM maven:3.6.3-jdk-11-slim AS builder
+ ---> 2a41cd9e737b
+Step 2/17 : WORKDIR /calculadora
+ ---> Using cache
+ ---> a07d641ce9a7
+Step 3/17 : COPY pom.xml .
+ ---> Using cache
+ ---> 3db86637d276
+Step 4/17 : RUN mvn -B -e -C -T 1C org.apache.maven.plugins:maven-dependency-plugin:3.0.2:go-offline
+ ---> Using cache
+ ---> 79bfc130acc3
+Step 5/17 : COPY src ./src
+ ---> c89142b4938e
+Step 6/17 : RUN ls -la ./src
+ ---> Running in 4ef4270cb4b8
+total 16
+drwxr-xr-x 4 root root 4096 Mar 27 16:37 .
+drwxr-xr-x 1 root root 4096 Mar 27 16:37 ..
+drwxr-xr-x 4 root root 4096 Mar 23 21:28 main
+drwxr-xr-x 3 root root 4096 Mar 23 21:28 test
+Removing intermediate container 4ef4270cb4b8
+ ---> 7ee039fa7697
+Step 7/17 : RUN mvn clean package
+ ---> Running in 0babc9495514
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.mitocode:mitocode-calculator:jar:0.0.1-SNAPSHOT
+[WARNING] The expression ${artifactId} is deprecated. Please use ${project.artifactId} instead.
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< com.mitocode:mitocode-calculator >------------------
+[INFO] Building mitocode-calculator 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ mitocode-calculator ---
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.4:prepare-agent (default) @ mitocode-calculator ---
+[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.4/org.jacoco.agent-0.8.4-runtime.jar=destfile=/calculadora/target/jacoco.exec,excludes=**/SimpleCalculatorApplication*:**/SwaggerConfiguration*
+[INFO] 
+[INFO] --- maven-resources-plugin:3.1.0:resources (default-resources) @ mitocode-calculator ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] Copying 2 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ mitocode-calculator ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /calculadora/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:3.1.0:testResources (default-testResources) @ mitocode-calculator ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /calculadora/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.1:testCompile (default-testCompile) @ mitocode-calculator ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /calculadora/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.22.2:test (default-test) @ mitocode-calculator ---
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit-platform/2.22.2/surefire-junit-platform-2.22.2.pom
+Progress (1): 2.2/7.0 kB
+Progress (1): 5.0/7.0 kB
+Progress (1): 7.0 kB    
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit-platform/2.22.2/surefire-junit-platform-2.22.2.pom (7.0 kB at 6.5 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-providers/2.22.2/surefire-providers-2.22.2.pom
+Progress (1): 2.2/2.5 kB
+Progress (1): 2.5 kB    
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-providers/2.22.2/surefire-providers-2.22.2.pom (2.5 kB at 12 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-launcher/1.3.1/junit-platform-launcher-1.3.1.pom
+Progress (1): 2.2 kB
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-launcher/1.3.1/junit-platform-launcher-1.3.1.pom (2.2 kB at 12 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.pom
+Progress (1): 1.2 kB
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.pom (1.2 kB at 6.8 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-engine/1.3.1/junit-platform-engine-1.3.1.pom
+Progress (1): 2.2/2.4 kB
+Progress (1): 2.4 kB    
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-engine/1.3.1/junit-platform-engine-1.3.1.pom (2.4 kB at 13 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.pom
+Progress (1): 2.0 kB
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.pom (2.0 kB at 11 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.pom
+Progress (1): 1.7 kB
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.pom (1.7 kB at 9.3 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit-platform/2.22.2/surefire-junit-platform-2.22.2.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-engine/1.3.1/junit-platform-engine-1.3.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-launcher/1.3.1/junit-platform-launcher-1.3.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.jar
+Progress (1): 2.2 kB
+                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar (2.2 kB at 11 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar
+Progress (1): 2.2/7.1 kB
+Progress (1): 5.0/7.1 kB
+Progress (1): 7.1 kB    
+Progress (2): 7.1 kB | 2.2/95 kB
+Progress (3): 7.1 kB | 2.2/95 kB | 2.2/78 kB
+Progress (3): 7.1 kB | 2.2/95 kB | 5.0/78 kB
+Progress (3): 7.1 kB | 2.2/95 kB | 7.7/78 kB
+Progress (4): 7.1 kB | 2.2/95 kB | 7.7/78 kB | 2.2/66 kB
+Progress (5): 7.1 kB | 2.2/95 kB | 7.7/78 kB | 2.2/66 kB | 2.2/135 kB
+Progress (5): 7.1 kB | 2.2/95 kB | 7.7/78 kB | 2.2/66 kB | 5.0/135 kB
+Progress (5): 7.1 kB | 2.2/95 kB | 7.7/78 kB | 2.2/66 kB | 7.7/135 kB
+Progress (5): 7.1 kB | 2.2/95 kB | 7.7/78 kB | 2.2/66 kB | 10/135 kB 
+Progress (5): 7.1 kB | 5.0/95 kB | 7.7/78 kB | 2.2/66 kB | 10/135 kB
+Progress (5): 7.1 kB | 7.7/95 kB | 7.7/78 kB | 2.2/66 kB | 10/135 kB
+Progress (5): 7.1 kB | 10/95 kB | 7.7/78 kB | 2.2/66 kB | 10/135 kB 
+Progress (5): 7.1 kB | 10/95 kB | 10/78 kB | 2.2/66 kB | 10/135 kB 
+Progress (5): 7.1 kB | 10/95 kB | 10/78 kB | 5.0/66 kB | 10/135 kB
+Progress (5): 7.1 kB | 10/95 kB | 10/78 kB | 7.7/66 kB | 10/135 kB
+Progress (5): 7.1 kB | 10/95 kB | 10/78 kB | 10/66 kB | 10/135 kB 
+                                                                 
+Downloaded from central: https://repo.maven.apache.org/maven2/org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar (7.1 kB at 35 kB/s)
+Progress (4): 10/95 kB | 10/78 kB | 10/66 kB | 13/135 kB
+Progress (4): 13/95 kB | 10/78 kB | 10/66 kB | 13/135 kB
+Progress (4): 13/95 kB | 10/78 kB | 13/66 kB | 13/135 kB
+Progress (4): 13/95 kB | 13/78 kB | 13/66 kB | 13/135 kB
+Progress (4): 16/95 kB | 13/78 kB | 13/66 kB | 13/135 kB
+Progress (4): 16/95 kB | 13/78 kB | 16/66 kB | 13/135 kB
+Progress (4): 16/95 kB | 13/78 kB | 16/66 kB | 16/135 kB
+Progress (4): 16/95 kB | 13/78 kB | 16/66 kB | 19/135 kB
+Progress (4): 16/95 kB | 13/78 kB | 16/66 kB | 21/135 kB
+Progress (4): 16/95 kB | 13/78 kB | 16/66 kB | 24/135 kB
+Progress (4): 16/95 kB | 13/78 kB | 16/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 13/78 kB | 16/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 16/78 kB | 16/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 19/78 kB | 16/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 21/78 kB | 16/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 24/78 kB | 16/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 24/78 kB | 19/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 24/78 kB | 21/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 24/78 kB | 24/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 27/78 kB | 24/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 30/78 kB | 24/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 32/78 kB | 24/66 kB | 27/135 kB
+Progress (4): 19/95 kB | 32/78 kB | 24/66 kB | 30/135 kB
+Progress (4): 21/95 kB | 32/78 kB | 24/66 kB | 30/135 kB
+Progress (4): 24/95 kB | 32/78 kB | 24/66 kB | 30/135 kB
+Progress (4): 24/95 kB | 32/78 kB | 27/66 kB | 30/135 kB
+Progress (4): 24/95 kB | 32/78 kB | 30/66 kB | 30/135 kB
+Progress (4): 24/95 kB | 32/78 kB | 32/66 kB | 30/135 kB
+Progress (4): 24/95 kB | 32/78 kB | 32/66 kB | 32/135 kB
+Progress (4): 27/95 kB | 32/78 kB | 32/66 kB | 32/135 kB
+Progress (4): 30/95 kB | 32/78 kB | 32/66 kB | 32/135 kB
+Progress (4): 32/95 kB | 32/78 kB | 32/66 kB | 32/135 kB
+Progress (4): 36/95 kB | 32/78 kB | 32/66 kB | 32/135 kB
+Progress (4): 40/95 kB | 32/78 kB | 32/66 kB | 32/135 kB
+Progress (4): 40/95 kB | 32/78 kB | 36/66 kB | 32/135 kB
+Progress (4): 40/95 kB | 32/78 kB | 40/66 kB | 32/135 kB
+Progress (4): 40/95 kB | 32/78 kB | 40/66 kB | 36/135 kB
+Progress (4): 40/95 kB | 32/78 kB | 40/66 kB | 40/135 kB
+Progress (4): 40/95 kB | 32/78 kB | 40/66 kB | 45/135 kB
+Progress (4): 40/95 kB | 32/78 kB | 45/66 kB | 45/135 kB
+Progress (4): 40/95 kB | 36/78 kB | 45/66 kB | 45/135 kB
+Progress (4): 40/95 kB | 40/78 kB | 45/66 kB | 45/135 kB
+Progress (4): 40/95 kB | 45/78 kB | 45/66 kB | 45/135 kB
+Progress (4): 40/95 kB | 49/78 kB | 45/66 kB | 45/135 kB
+Progress (4): 40/95 kB | 49/78 kB | 45/66 kB | 49/135 kB
+Progress (4): 40/95 kB | 49/78 kB | 49/66 kB | 49/135 kB
+Progress (4): 45/95 kB | 49/78 kB | 49/66 kB | 49/135 kB
+Progress (4): 49/95 kB | 49/78 kB | 49/66 kB | 49/135 kB
+Progress (4): 49/95 kB | 53/78 kB | 49/66 kB | 49/135 kB
+Progress (4): 49/95 kB | 57/78 kB | 49/66 kB | 49/135 kB
+Progress (4): 53/95 kB | 57/78 kB | 49/66 kB | 49/135 kB
+Progress (4): 53/95 kB | 57/78 kB | 53/66 kB | 49/135 kB
+Progress (4): 53/95 kB | 57/78 kB | 53/66 kB | 53/135 kB
+Progress (4): 53/95 kB | 57/78 kB | 53/66 kB | 57/135 kB
+Progress (4): 53/95 kB | 57/78 kB | 53/66 kB | 61/135 kB
+Progress (4): 53/95 kB | 57/78 kB | 57/66 kB | 61/135 kB
+Progress (4): 57/95 kB | 57/78 kB | 57/66 kB | 61/135 kB
+Progress (4): 57/95 kB | 57/78 kB | 61/66 kB | 61/135 kB
+Progress (4): 57/95 kB | 57/78 kB | 65/66 kB | 61/135 kB
+Progress (4): 57/95 kB | 57/78 kB | 66 kB | 61/135 kB   
+Progress (4): 57/95 kB | 57/78 kB | 66 kB | 65/135 kB
+Progress (4): 57/95 kB | 61/78 kB | 66 kB | 65/135 kB
+Progress (4): 61/95 kB | 61/78 kB | 66 kB | 65/135 kB
+Progress (4): 65/95 kB | 61/78 kB | 66 kB | 65/135 kB
+Progress (4): 69/95 kB | 61/78 kB | 66 kB | 65/135 kB
+Progress (4): 69/95 kB | 61/78 kB | 66 kB | 69/135 kB
+Progress (4): 69/95 kB | 65/78 kB | 66 kB | 69/135 kB
+Progress (4): 69/95 kB | 69/78 kB | 66 kB | 69/135 kB
+Progress (4): 69/95 kB | 73/78 kB | 66 kB | 69/135 kB
+Progress (4): 69/95 kB | 77/78 kB | 66 kB | 69/135 kB
+Progress (4): 69/95 kB | 77/78 kB | 66 kB | 73/135 kB
+Progress (4): 69/95 kB | 77/78 kB | 66 kB | 77/135 kB
+Progress (4): 73/95 kB | 77/78 kB | 66 kB | 77/135 kB
+Progress (4): 73/95 kB | 77/78 kB | 66 kB | 81/135 kB
+Progress (4): 77/95 kB | 77/78 kB | 66 kB | 81/135 kB
+Progress (4): 81/95 kB | 77/78 kB | 66 kB | 81/135 kB
+Progress (4): 81/95 kB | 77/78 kB | 66 kB | 85/135 kB
+Progress (4): 81/95 kB | 78 kB | 66 kB | 85/135 kB   
+Progress (4): 85/95 kB | 78 kB | 66 kB | 85/135 kB
+Progress (4): 85/95 kB | 78 kB | 66 kB | 90/135 kB
+Progress (4): 85/95 kB | 78 kB | 66 kB | 94/135 kB
+Progress (4): 85/95 kB | 78 kB | 66 kB | 98/135 kB
+Progress (4): 85/95 kB | 78 kB | 66 kB | 102/135 kB
+Progress (4): 85/95 kB | 78 kB | 66 kB | 106/135 kB
+Progress (4): 90/95 kB | 78 kB | 66 kB | 106/135 kB
+Progress (4): 94/95 kB | 78 kB | 66 kB | 106/135 kB
+Progress (4): 95 kB | 78 kB | 66 kB | 106/135 kB   
+Progress (4): 95 kB | 78 kB | 66 kB | 110/135 kB
+Progress (4): 95 kB | 78 kB | 66 kB | 114/135 kB
+                                                
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/surefire/surefire-junit-platform/2.22.2/surefire-junit-platform-2.22.2.jar (66 kB at 96 kB/s)
+Progress (3): 95 kB | 78 kB | 118/135 kB
+Progress (3): 95 kB | 78 kB | 122/135 kB
+Progress (3): 95 kB | 78 kB | 126/135 kB
+Progress (3): 95 kB | 78 kB | 131/135 kB
+Progress (3): 95 kB | 78 kB | 135/135 kB
+Progress (3): 95 kB | 78 kB | 135 kB    
+                                    
+Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.jar (78 kB at 111 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-launcher/1.3.1/junit-platform-launcher-1.3.1.jar (95 kB at 131 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-engine/1.3.1/junit-platform-engine-1.3.1.jar (135 kB at 171 kB/s)
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+16:37:29.787 [main] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:29.826 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+16:37:29.889 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+16:37:30.091 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.mitocode.calculator.SimpleCalculatorControllerTest] from class [org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper]
+16:37:30.151 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.mitocode.calculator.SimpleCalculatorControllerTest], using SpringBootContextLoader
+16:37:30.171 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTest-context.xml] does not exist
+16:37:30.180 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTestContext.groovy] does not exist
+16:37:30.190 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+16:37:30.196 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: SimpleCalculatorControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:37:30.399 [main] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:30.595 [main] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/calculadora/target/classes/com/mitocode/calculator/SimpleCalculatorApplication.class]
+16:37:30.638 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.mitocode.calculator.SimpleCalculatorApplication for test class com.mitocode.calculator.SimpleCalculatorControllerTest
+16:37:30.650 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - @TestExecutionListeners is not present for class [com.mitocode.calculator.SimpleCalculatorControllerTest]: using defaults.
+16:37:30.655 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+16:37:30.703 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/TransactionDefinition]
+16:37:30.710 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+16:37:30.716 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@4e4f4092, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@5d829ef0, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@4416e18d, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@5dfc2a4, org.springframework.test.context.support.DirtiesContextTestExecutionListener@3120495d, org.springframework.test.context.event.EventPublishingTestExecutionListener@781c2497, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@b75b890, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@70c491b8, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@439d545c, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@5a3cf824, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7c2b6acb]
+16:37:30.735 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:30.741 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:30.843 [main] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:30.850 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+16:37:30.854 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+16:37:30.858 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.mitocode.calculator.SimpleCalculatorControllerTest] from class [org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper]
+16:37:30.867 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.mitocode.calculator.SimpleCalculatorControllerTest], using SpringBootContextLoader
+16:37:30.874 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTest-context.xml] does not exist
+16:37:30.874 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: class path resource [com/mitocode/calculator/SimpleCalculatorControllerTestContext.groovy] does not exist
+16:37:30.875 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+16:37:30.882 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]: SimpleCalculatorControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:37:30.891 [main] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:30.896 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.mitocode.calculator.SimpleCalculatorApplication for test class com.mitocode.calculator.SimpleCalculatorControllerTest
+16:37:30.899 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - @TestExecutionListeners is not present for class [com.mitocode.calculator.SimpleCalculatorControllerTest]: using defaults.
+16:37:30.903 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+16:37:30.910 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/TransactionDefinition]
+16:37:30.922 [main] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+16:37:30.927 [main] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@e4ca109, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@15c16f19, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@1a17dd6f, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@be6d228, org.springframework.test.context.support.DirtiesContextTestExecutionListener@60c96eb4, org.springframework.test.context.event.EventPublishingTestExecutionListener@7eee6c13, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@5ab63a04, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@677cc4e8, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@4c6bba7d, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@41e8d917, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@2ae5bd34]
+16:37:30.929 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:30.931 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.116 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.122 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+[INFO] Running com.mitocode.calculator.SimpleCalculatorControllerTest
+16:37:31.153 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.158 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.162 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.170 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.183 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@6abb7b7d testClass = SimpleCalculatorControllerTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@34cf0e80 testClass = SimpleCalculatorControllerTest, locations = '{}', classes = '{class com.mitocode.calculator.SimpleCalculatorApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true}', contextCustomizers = set[[ImportsContextCustomizer@38ef1a0a key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration, org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@20580d4e, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@39c85c1a, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@48a2db72, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@7edb89f8, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@24952ccb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@3d88e6b9], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+16:37:31.201 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.208 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.mitocode.calculator.SimpleCalculatorControllerTest]
+16:37:31.222 [main] DEBUG org.springframework.test.context.support.DependencyInjectionTestExecutionListener - Performing dependency injection for test context [[DefaultTestContext@6abb7b7d testClass = SimpleCalculatorControllerTest, testInstance = com.mitocode.calculator.SimpleCalculatorControllerTest@5b7ee56c, testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@34cf0e80 testClass = SimpleCalculatorControllerTest, locations = '{}', classes = '{class com.mitocode.calculator.SimpleCalculatorApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true}', contextCustomizers = set[[ImportsContextCustomizer@38ef1a0a key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration, org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@20580d4e, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@39c85c1a, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@48a2db72, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@7edb89f8, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@24952ccb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@3d88e6b9], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]]].
+16:37:31.620 [main] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true, server.port=-1}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.2.4.RELEASE)
+
+2020-03-27 16:37:32.290  INFO 44 --- [           main] c.m.c.SimpleCalculatorControllerTest     : Starting SimpleCalculatorControllerTest on 0babc9495514 with PID 44 (started by root in /calculadora)
+2020-03-27 16:37:32.297  INFO 44 --- [           main] c.m.c.SimpleCalculatorControllerTest     : No active profile set, falling back to default profiles: default
+2020-03-27 16:37:37.262  WARN 44 --- [           main] uration$JodaDateTimeJacksonConfiguration : Auto-configuration of Jackson's Joda-Time integration is deprecated in favor of using java.time (JSR-310).
+2020-03-27 16:37:37.420  INFO 44 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-03-27 16:37:37.567  INFO 44 --- [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2020-03-27 16:37:37.781  INFO 44 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2020-03-27 16:37:37.787  INFO 44 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2020-03-27 16:37:37.815  INFO 44 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 25 ms
+2020-03-27 16:37:37.873  INFO 44 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2020-03-27 16:37:37.943  INFO 44 --- [           main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2020-03-27 16:37:37.982  INFO 44 --- [           main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2020-03-27 16:37:38.470  INFO 44 --- [           main] c.m.c.SimpleCalculatorControllerTest     : Started SimpleCalculatorControllerTest in 6.816 seconds (JVM running for 10.753)
+2020-03-27 16:37:39.431  WARN 44 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "num1"]
+2020-03-27 16:37:39.452  WARN 44 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "a"]
+2020-03-27 16:37:39.500  WARN 44 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "a"]
+2020-03-27 16:37:39.566  WARN 44 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/whoami
+       Parameters = {}
+          Headers = [Content-Type:"application/json"]
+             Body = <no character encoding set>
+    Session Attrs = {}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.HttpRequestMethodNotSupportedException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 405
+    Error message = Request method 'POST' not supported
+          Headers = [Allow:"GET"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+2020-03-27 16:37:39.626  WARN 44 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException: For input string: "a"]
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.511 s - in com.mitocode.calculator.SimpleCalculatorControllerTest
+2020-03-27 16:37:39.817  INFO 44 --- [extShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.4:report (report) @ mitocode-calculator ---
+[INFO] Loading execution data file /calculadora/target/jacoco.exec
+[INFO] Analyzed bundle 'mitocode-calculator' with 1 classes
+[INFO] 
+[INFO] --- maven-jar-plugin:3.1.2:jar (default-jar) @ mitocode-calculator ---
+[INFO] Building jar: /calculadora/target/mitocode-calculator.jar
+[INFO] 
+[INFO] --- spring-boot-maven-plugin:2.2.4.RELEASE:repackage (repackage) @ mitocode-calculator ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  24.234 s
+[INFO] Finished at: 2020-03-27T16:37:41Z
+[INFO] ------------------------------------------------------------------------
+Removing intermediate container 0babc9495514
+ ---> 3afc42329ae3
+Step 8/17 : RUN mvn jacoco:report
+ ---> Running in cae8f5d0d832
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.mitocode:mitocode-calculator:jar:0.0.1-SNAPSHOT
+[WARNING] The expression ${artifactId} is deprecated. Please use ${project.artifactId} instead.
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< com.mitocode:mitocode-calculator >------------------
+[INFO] Building mitocode-calculator 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.8.4:report (default-cli) @ mitocode-calculator ---
+[INFO] Loading execution data file /calculadora/target/jacoco.exec
+[INFO] Analyzed bundle 'mitocode-calculator' with 1 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.967 s
+[INFO] Finished at: 2020-03-27T16:37:46Z
+[INFO] ------------------------------------------------------------------------
+Removing intermediate container cae8f5d0d832
+ ---> 7929d1aa1e53
+Step 9/17 : RUN ls -la /calculadora
+ ---> Running in 6473b3838f2e
+total 20
+drwxr-xr-x 1 root root 4096 Mar 27 16:37 .
+drwxr-xr-x 1 root root 4096 Mar 27 16:37 ..
+-rw-r--r-- 1 root root 3195 Mar 23 19:45 pom.xml
+drwxr-xr-x 4 root root 4096 Mar 27 16:37 src
+drwxr-xr-x 1 root root 4096 Mar 27 16:37 target
+Removing intermediate container 6473b3838f2e
+ ---> 9c2f02e7170f
+Step 10/17 : FROM openjdk:11.0.6-jdk
+ ---> d29dd615eaf4
+Step 11/17 : LABEL maintainer="alonsofisi@gmail.com"
+ ---> Using cache
+ ---> d0afce641ad3
+Step 12/17 : WORKDIR /workspace
+ ---> Using cache
+ ---> adc28e5fe4b1
+Step 13/17 : RUN ls -la /workspace
+ ---> Using cache
+ ---> af594a37a89d
+Step 14/17 : COPY --from=builder /calculadora/target/mitocode*calculator*.jar app.jar
+ ---> c59a0e991086
+Step 15/17 : RUN ls -la /workspace
+ ---> Running in 20b47f38ca0e
+total 26348
+drwxr-xr-x 1 root root     4096 Mar 27 16:37 .
+drwxr-xr-x 1 root root     4096 Mar 27 16:37 ..
+-rw-r--r-- 1 root root 26965535 Mar 27 16:37 app.jar
+Removing intermediate container 20b47f38ca0e
+ ---> 7e85adcf501f
+Step 16/17 : ENTRYPOINT exec java -jar /workspace/app.jar
+ ---> Running in 8b7e316fddc4
+Removing intermediate container 8b7e316fddc4
+ ---> 9fa455e821f3
+Step 17/17 : EXPOSE 8080
+ ---> Running in c111b2f85171
+Removing intermediate container c111b2f85171
+ ---> 179f42764062
+Successfully built 179f42764062
+Successfully tagged alonsozy/final-project:11.0.2
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Image for test With Newman)
+[Pipeline] echo
+Building ${NEWMAN_DOCKER_IMAGE}
+[Pipeline] sh
++ docker build -t alonsozy/test-newman:11.0.2 ./test-newman/
+Sending build context to Docker daemon  14.85kB
+
+Step 1/5 : FROM node:12.2.0-alpine
+ ---> f391dabf9dce
+Step 2/5 : ENV URL_SERVER=http://192.168.99.100:8080
+ ---> Using cache
+ ---> d66b91eb4185
+Step 3/5 : COPY calculator-collection.json .
+ ---> Using cache
+ ---> 2448c2fccf83
+Step 4/5 : RUN npm install -g newman
+ ---> Using cache
+ ---> 5bbc8f42589f
+Step 5/5 : ENTRYPOINT newman run calculator-collection.json  --global-var url_server=${URL_SERVER}
+ ---> Using cache
+ ---> 8b438aadfce1
+Successfully built 8b438aadfce1
+Successfully tagged alonsozy/test-newman:11.0.2
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pushing images..)
+[Pipeline] echo
+Autentificacion
+[Pipeline] withDockerRegistry
+Using the existing docker config file.Removing blacklisted property: auths$ docker login -u alonsozy -p ******** https://index.docker.io/v1/
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /var/lib/jenkins/workspace/pushing_images@tmp/3b441d89-3054-4338-9155-adf9ab0c3d20/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] {
+[Pipeline] sh
++ docker push alonsozy/final-project:11.0.2
+The push refers to repository [docker.io/alonsozy/final-project]
+a7db225f91e5: Preparing
+33dfed90ce4d: Preparing
+4186db990701: Preparing
+5b5fbf48ec75: Preparing
+832f129ebea4: Preparing
+6670e930ed33: Preparing
+c7f27a4eb870: Preparing
+e70dfb4c3a48: Preparing
+1c76bd0dc325: Preparing
+6670e930ed33: Waiting
+c7f27a4eb870: Waiting
+e70dfb4c3a48: Waiting
+1c76bd0dc325: Waiting
+4186db990701: Layer already exists
+33dfed90ce4d: Layer already exists
+832f129ebea4: Layer already exists
+5b5fbf48ec75: Layer already exists
+e70dfb4c3a48: Layer already exists
+c7f27a4eb870: Layer already exists
+6670e930ed33: Layer already exists
+1c76bd0dc325: Layer already exists
+a7db225f91e5: Pushed
+11.0.2: digest: sha256:d0e438fb565b5b39b3e3a74bae7793d13edf976e87fb2b48490192e38aadc960 size: 2213
+[Pipeline] sh
++ docker push alonsozy/test-newman:11.0.2
+The push refers to repository [docker.io/alonsozy/test-newman]
+db1c7407bfd4: Preparing
+2dd2f96d9739: Preparing
+917da41f96aa: Preparing
+7d6e2801765d: Preparing
+f1b5933fe4b5: Preparing
+917da41f96aa: Layer already exists
+f1b5933fe4b5: Layer already exists
+2dd2f96d9739: Layer already exists
+7d6e2801765d: Layer already exists
+db1c7407bfd4: Layer already exists
+11.0.2: digest: sha256:5f9e1ef1631d2ce9e74eb245fce85ac6cebba85eee814dd4c51c83e6b856a609 size: 1371
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] sh
++ docker rmi alonsozy/final-project:11.0.2
+Untagged: alonsozy/final-project:11.0.2
+Untagged: alonsozy/final-project@sha256:d0e438fb565b5b39b3e3a74bae7793d13edf976e87fb2b48490192e38aadc960
+Deleted: sha256:179f427640626c70e71ef9a06dabdf8458373d28e927c77567243865b1d7e534
+Deleted: sha256:9fa455e821f3a45042e95e0b3561fcac44d4b06ad6e51c9c44b329c7e453c2f8
+Deleted: sha256:7e85adcf501f598c5ecf208fa4a87311e5b3d9bb1042bb86d64a6b522c6a9d6b
+Deleted: sha256:c59a0e991086eaec650fde06761a77071b9b158b9726a46dad5711c7b0d21b1f
+Deleted: sha256:265e76fefd5a4fbea993f028208601dc5186d791355700ba76effbe549c28cfc
+[Pipeline] sh
++ docker rmi alonsozy/test-newman:11.0.2
+Untagged: alonsozy/test-newman:11.0.2
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

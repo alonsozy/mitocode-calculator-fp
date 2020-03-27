@@ -29,3 +29,12 @@
 9   Se creo el pipeline para la fase de construcción y almacenado del jar en los artefactos del jenkins, los archivos utilizados son: 
     Jenkinsfile
     evidencias en la carpeta: punto9_evidencias
+
+10  Se creo el pipeline para la publicacion del contenedor con docker swarm en aws:
+    10.1    Se creo la instancia t2-micro en AWS
+    10.2    Se creo el pipeline para publicar en docker swarm: Jenkins_swarm
+    10.3    Se commiteo un pequeño cambio en las fuentes
+    10.4    Se uso el pipeline creado en el punto 8 para la publicacion de la imagen en docker hub, las evidencias
+            de la ejecucion de este pipeline exitoso esta en la carpeta punto10_evidencias/log_pipeline10_publish-11-0-2.log
+    10.5    Se ejecuto el pipeline para la actualizacion de la aplicacion, las evidencias de la ejecucion exitosa 
+            esta en la carpeta punto10_evidencias/log_pipeline10_push_image11-0-2.log

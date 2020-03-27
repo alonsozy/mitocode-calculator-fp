@@ -1,3 +1,4 @@
+--permisos llave sudo chmod --recursive a+rwx /var/lib/jenkins/pems/
 
 newman run calculator-collection.json -e vars.json
 
