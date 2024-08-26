@@ -19,7 +19,7 @@
 				<maven.compiler.source>1.8</maven.compiler.source>
 				<maven.compiler.target>1.8</maven.compiler.target>
 				<swagger.version>1.5.9</swagger.version>
-				<springfox.version>2.5.0</springfox.version>
+				<springfox.version>2.10.0</springfox.version>
 				<dependency.jacoco.version>0.8.4</dependency.jacoco.version>
 		</properties>
 
